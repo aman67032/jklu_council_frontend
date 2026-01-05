@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Colors */
+  --primary: #FF6600;
+  /* Orange */
+  --primary-light: #FF8533;
+  --primary-dark: #CC5200;
+
+  --secondary: #0000FF;
+  /* Blue */
+  --secondary-light: #3333FF;
+  --secondary-dark: #0000CC;
+
+  /* UI Colors - Light Mode */
+  --background: #FAF9F6;
+  --foreground: #171717;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --nav-bg: rgba(250, 249, 246, 0.15);
+
+  /* Fallback for shadcn/ui or other components */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html.dark {
+  /* UI Colors - Dark Mode */
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card-bg: #171717;
+  --card-border: #262626;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --nav-bg: rgba(10, 10, 10, 0.15);
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans), Arial, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
