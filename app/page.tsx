@@ -28,9 +28,15 @@ export default function Home() {
   const [date, setDate] = useState<any>(new Date());
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showLanding, setShowLanding] = useState(true);
+  const [showLanding, setShowLanding] = useState(false);
+  const [isCheckingLanding, setIsCheckingLanding] = useState(true);
 
   useEffect(() => {
+    const hasSeenLanding = sessionStorage.getItem('hasSeenLanding');
+    if (!hasSeenLanding) {
+      setShowLanding(true);
+    }
+    setIsCheckingLanding(false);
     fetchEvents();
   }, []);
 
@@ -64,8 +70,19 @@ export default function Home() {
     ? ['#FF6600', '#FF8833', '#0000FF', '#3333FF'] // Dark Orange to Blue
     : ['#FF6600', '#FF9944', '#0066FF', '#3399FF']; // Lighter variants for light mode
 
+  if (isCheckingLanding) {
+    return <div className="min-h-screen bg-black" />;
+  }
+
   if (showLanding) {
-    return <VideoLanding onComplete={() => setShowLanding(false)} />;
+    return (
+      <VideoLanding
+        onComplete={() => {
+          sessionStorage.setItem('hasSeenLanding', 'true');
+          setShowLanding(false);
+        }}
+      />
+    );
   }
 
   return (
