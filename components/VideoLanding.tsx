@@ -35,7 +35,6 @@ export default function VideoLanding({ onComplete }: VideoLandingProps) {
                 ref={videoRef}
                 src={videoSrc}
                 autoPlay
-                muted
                 playsInline
                 onLoadedData={() => setIsVideoLoaded(true)}
                 onEnded={onComplete}
