@@ -19,6 +19,15 @@ export default function Navbar() {
   };
 
   const isTechClub = pathname === '/clubs/technology-club';
+  const isMusicClub = pathname === '/clubs/music-club';
+  const isRoboticsClub = pathname === '/clubs/robotics-club';
+  const isDramaClub = pathname === '/clubs/drama-club';
+  const isPhotographyClub = pathname === '/clubs/photography-club';
+  const isLiteraryClub = pathname === '/clubs/literary-club';
+  const isMediaClub = pathname === '/clubs/media-club';
+  const isAstronomyClub = pathname === '/clubs/astronomy-club';
+  const isDesignClub = pathname === '/clubs/design-club';
+  const isBusinessClub = pathname === '/clubs/business-club';
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-[var(--nav-bg)]/80 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-2xl transition-all duration-300">
@@ -84,7 +93,7 @@ export default function Navbar() {
 
           {/* Right Text / Actions */}
           <div className="flex items-center space-x-6">
-            {!isTechClub && (
+            {!isTechClub && !isMusicClub && !isRoboticsClub && !isDramaClub && !isPhotographyClub && !isLiteraryClub && !isMediaClub && !isAstronomyClub && !isDesignClub && !isBusinessClub && (
               <div className="scale-75 origin-right hover:rotate-12 transition-transform duration-500">
                 <BB8Switch />
               </div>

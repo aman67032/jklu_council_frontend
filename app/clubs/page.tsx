@@ -85,10 +85,23 @@ export default function ClubsPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {filteredClubs.map((club, index) => {
-                            const theme = getClubTheme(club.name);
+                            // Data overrides for specific clubs (fixing backend typos/slugs)
+                            let displayClub = { ...club };
+                            if (club.slug === 'astro-club') {
+                                displayClub.name = 'Astronomy Club';
+                                displayClub.slug = 'astronomy-club';
+                            }
+                            if (club.slug === 'media-club') {
+                                displayClub.name = 'Media Club'; // Ensure consistency if backend differs
+                            }
+                            if (club.slug === 'business-club') {
+                                displayClub.name = 'Corpova';
+                            }
+
+                            const theme = getClubTheme(displayClub.name);
                             return (
                                 <Link
-                                    href={`/clubs/${club.slug}`}
+                                    href={`/clubs/${displayClub.slug}`}
                                     key={club.id}
                                     className="group relative h-[420px] bg-slate-900/40 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-600 transition-all duration-500 hover:shadow-[0_0_30px_rgba(2,6,23,0.8)] flex flex-col"
                                     style={{ animationDelay: `${index * 100}ms` }}
@@ -112,9 +125,9 @@ export default function ClubsPage() {
                                             {theme.icon}
                                         </div>
 
-                                        {club.council_name && (
+                                        {displayClub.council_name && (
                                             <div className="absolute top-8 right-8 px-3 py-1 rounded-full bg-slate-950/50 border border-slate-700/50 text-xs font-bold tracking-wider text-slate-400 uppercase backdrop-blur-md">
-                                                {club.council_name}
+                                                {displayClub.council_name}
                                             </div>
                                         )}
                                     </div>
@@ -122,10 +135,10 @@ export default function ClubsPage() {
                                     {/* Content Section */}
                                     <div className="relative p-8 flex-1 flex flex-col">
                                         <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
-                                            {club.name}
+                                            {displayClub.name}
                                         </h3>
                                         <p className="text-slate-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
-                                            {club.description || 'A community for like-minded individuals to innovate, create, and grow together.'}
+                                            {displayClub.description || 'A community for like-minded individuals to innovate, create, and grow together.'}
                                         </p>
 
                                         <div className="pt-6 border-t border-white/5 flex items-center justify-between mt-auto">
