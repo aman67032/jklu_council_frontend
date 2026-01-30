@@ -3,49 +3,54 @@
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useRouter } from 'next/navigation';
-import { LogOut, User, Home, Users, BarChart3, Award, Calendar, Sun, Moon } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+import { LogOut, User, Home, Users, BarChart3, Award, Calendar } from 'lucide-react';
 import BB8Switch from './BB8Switch';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     logout();
     router.push('/');
   };
 
+  const isTechClub = pathname === '/clubs/technology-club';
+
   return (
-    <nav className="bg-[var(--nav-bg)] backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-[var(--card-border)] transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-24">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-[var(--nav-bg)]/80 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-2xl transition-all duration-300">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo Section */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-4 group">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 transition-transform duration-300 group-hover:scale-105">
                 {/* Light Mode Logo */}
                 <img
                   src="/black_jklu_logo.png"
                   alt="JKLU Logo"
-                  className="h-16 w-auto object-contain dark:hidden"
+                  className="h-12 w-auto object-contain dark:hidden"
                 />
                 {/* Dark Mode Logo */}
                 <img
                   src="/white_jklu_logo.png"
                   alt="JKLU Logo"
-                  className="h-16 w-auto object-contain hidden dark:block"
+                  className="h-12 w-auto object-contain hidden dark:block"
                 />
-                <div className="h-10 w-[1px] bg-gray-300 dark:bg-gray-700 mx-1"></div>
+                <div className="h-8 w-[1px] bg-gray-300 dark:bg-gray-700 mx-1"></div>
                 <img
                   src="/council_logo.png"
                   alt="Council Logo"
-                  className="h-20 w-auto object-contain"
+                  className="h-14 w-auto object-contain"
                 />
               </div>
             </Link>
 
-            <div className="hidden md:flex md:space-x-2 ml-4 text-sm font-medium">
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center space-x-1 ml-4">
               <NavLink href="/" icon={<Home className="w-4 h-4" />}>
                 Home
               </NavLink>
@@ -77,22 +82,25 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Right Text / Actions */}
           <div className="flex items-center space-x-6">
-            <div className="scale-75 origin-right">
-              <BB8Switch />
-            </div>
+            {!isTechClub && (
+              <div className="scale-75 origin-right hover:rotate-12 transition-transform duration-500">
+                <BB8Switch />
+              </div>
+            )}
 
             {user ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 pl-4 border-l border-white/10">
                 <div className="hidden sm:flex flex-col items-end">
                   <span className="text-sm font-semibold text-[var(--text-primary)]">{user.name}</span>
-                  <span className="text-xs text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-full font-medium capitalize">
+                  <span className="text-[10px] uppercase tracking-wider text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-full font-bold">
                     {user.role.replace(/_/g, ' ')}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="inline-flex items-center justify-center p-2 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center p-2 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all duration-300 hover:rotate-90"
                   title="Logout"
                 >
                   <LogOut className="w-5 h-5" />
@@ -101,9 +109,10 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] rounded-full hover:opacity-90 shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                className="relative inline-flex items-center px-6 py-2.5 overflow-hidden text-sm font-bold text-white transition-all duration-300 bg-[var(--primary)] rounded-xl group hover:bg-[var(--primary-dark)] shadow-[0_0_20px_rgba(255,102,0,0.3)] hover:shadow-[0_0_30px_rgba(255,102,0,0.6)] hover:-translate-y-1"
               >
-                Login
+                <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                <span className="relative">Login</span>
               </Link>
             )}
           </div>
@@ -117,10 +126,16 @@ function NavLink({ href, children, icon }: { href: string; children: React.React
   return (
     <Link
       href={href}
-      className="inline-flex items-center px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary)]/5 rounded-lg transition-colors group"
+      className="relative px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors duration-300 group"
     >
-      {icon && <span className="mr-2 group-hover:text-[var(--primary)] text-[var(--text-secondary)] transition-colors">{icon}</span>}
-      {children}
+      <span className="flex items-center gap-2 relative z-10">
+        <span className="group-hover:text-[var(--primary)] transition-colors duration-300 group-hover:scale-110 transform">
+          {icon}
+        </span>
+        {children}
+      </span>
+      <span className="absolute inset-0 bg-[var(--primary)]/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out origin-center"></span>
+      <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-[var(--primary)] group-hover:w-1/2 group-hover:left-1/4 transition-all duration-300 ease-out"></span>
     </Link>
   );
 }

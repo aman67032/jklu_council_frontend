@@ -52,7 +52,7 @@ export default function VideoLanding({ onComplete }: VideoLandingProps) {
                 ref={videoRef}
                 src={videoSrc}
                 autoPlay
-                muted={false}
+                muted
                 playsInline
                 preload="auto"
                 onCanPlayThrough={() => setIsVideoLoaded(true)}

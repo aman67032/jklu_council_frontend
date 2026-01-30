@@ -20,10 +20,14 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
-      router.push('/');
-    } catch (err) {
-      setError('Invalid email or password');
+      const result = await login(email, password);
+      if (result.success) {
+        router.push('/');
+      } else {
+        setError(result.error);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
