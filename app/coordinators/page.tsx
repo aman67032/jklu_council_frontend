@@ -15,6 +15,7 @@ const COORDINATORS = [
         name: "Pulkit Dosi",
         role: "Academic Coordinator",
         studentId: "2024BBA067",
+        image: "/Photoes ID CARD Student Council/Pulkit Dosi (Academic Coordinator).jpg",
         description: "Ensures smooth academic operations, addressing student concerns regarding curriculum and scheduling, and acting as a bridge between faculty and students."
     },
     {
@@ -22,6 +23,7 @@ const COORDINATORS = [
         name: "Adarsh Singh",
         role: "Placement Coordinator",
         studentId: "2024BTECH067",
+        image: "/Photoes ID CARD Student Council/Adarsh Singh(Placement Coordinator).jpg",
         description: "Facilitates campus recruitment drives, coordinates with the placement cell, and organizes career development workshops for student success."
     },
     {
@@ -29,6 +31,7 @@ const COORDINATORS = [
         name: "Tanik Gupta",
         role: "Transport Coordinator",
         studentId: "2024BTECH234",
+        image: "/Photoes ID CARD Student Council/TanikGupta.jpg",
         description: "Manages university transport logistics, ensuring timely shuttle services and addressing all student commuting requirements."
     },
     {
@@ -36,6 +39,7 @@ const COORDINATORS = [
         name: "Kartavya Garhwal",
         role: "Mess Coordinator",
         studentId: "2024BTECH079",
+        image: "/Photoes ID CARD Student Council/Kartavya Garhwal (Mess Coordinator).jpg",
         description: "Supervises mess operations to maintain food quality and hygiene, while gathering and implementing student feedback on the menu."
     },
     {
@@ -43,6 +47,7 @@ const COORDINATORS = [
         name: "Aryan Chaturvedi",
         role: "Boys Hostel Coordinator",
         studentId: "2024BTECH265",
+        image: "/Photoes ID CARD Student Council/Aryan Chaturvedi.jpg",
         description: "Oversees the welfare of male residents, resolving accommodation issues and ensuring a safe, disciplined hostel environment."
     },
     {
@@ -50,6 +55,7 @@ const COORDINATORS = [
         name: "Astha Barnwal",
         role: "Girls Hostel Coordinator",
         studentId: "2024BDES007",
+        image: "/Photoes ID CARD Student Council/Astha Barnwal_.jpg",
         description: "Ensures a secure and comfortable living environment for female students, addressing maintenance requests and fostering hostel community life."
     },
     {
@@ -57,6 +63,7 @@ const COORDINATORS = [
         name: "Himani Bohra",
         role: "Website Coordinator",
         studentId: "2024BTECH134",
+        // image: pending
         description: "Maintains and updates the council's digital presence, ensuring accurate information dissemination through the official website."
     },
     {
@@ -64,6 +71,7 @@ const COORDINATORS = [
         name: "Vaibhav Khandelwal",
         role: "Campus Ambassador",
         studentId: "2024BTECH110",
+        image: "/Photoes ID CARD Student Council/Vaibhav Khandelwal.jpg",
         description: "Represents the university in external forums, fosters inter-institutional relations, and champions the campus culture to the outside world."
     },
     {
@@ -71,6 +79,7 @@ const COORDINATORS = [
         name: "Charvi Sharma",
         role: "Alumni Relations Coordinator",
         studentId: "2025BBA029",
+        image: "/Photoes ID CARD Student Council/Charvi Sharma jpg.jpg",
         description: "Strengthens the bond between alumni and current students through networking events, mentorship programs, and regular engagement."
     },
     {
@@ -78,6 +87,7 @@ const COORDINATORS = [
         name: "Kaushal Malvi",
         role: "Social Media Coordinator",
         studentId: "2025BTECH263",
+        image: "/Photoes ID CARD Student Council/Kaushal Malvi.png",
         description: "Manages the council's social media handles, creating engaging content to cover events and keep the student body connected and informed."
     },
 ];
@@ -145,10 +155,18 @@ function NewspaperCard({ coordinator, index }: { coordinator: any, index: number
             <div className="absolute inset-0 bg-slate-500/5 pointer-events-none mix-blend-multiply"></div>
 
             {/* Photo Placeholder */}
-            <div className="relative aspect-[4/5] bg-slate-200 mb-4 border-2 border-slate-800 grayscale group-hover:grayscale-0 transition-all duration-500 overflow-hidden">
+            <div className="relative aspect-[4/5] bg-slate-200 mb-4 border-2 border-slate-800 transition-all duration-500 overflow-hidden">
                 {/* Fallback pattern or user icon if no image */}
                 <div className="absolute inset-0 flex items-center justify-center bg-slate-300">
-                    <User className="w-24 h-24 text-slate-500 opacity-50" />
+                    {coordinator.image ? (
+                        <img
+                            src={coordinator.image}
+                            alt={coordinator.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <User className="w-24 h-24 text-slate-500 opacity-50" />
+                    )}
                 </div>
 
                 {/* Scanlines effect */}
