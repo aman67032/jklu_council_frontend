@@ -107,13 +107,13 @@ export default function ArtClubPage() {
                         role="Chairperson"
                         name="Jigeesha Agarawal"
                         color="pink"
-                        imageSrc="/Clubs/Art_club/Club_Chair.jpg"
+                        imageSrc="/Photoes ID CARD Student Council/Jigeesha Agarawal.jpg"
                     />
                     <LeaderCard
                         role="Co-Chairperson"
                         name="Mohit Suwalka"
                         color="purple"
-                        imageSrc="/Clubs/Art_club/Co-chair.jpg"
+                        imageSrc="/Photoes ID CARD Student Council/Mohit suwalka.jpg"
                     />
                 </div>
 

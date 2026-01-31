@@ -194,11 +194,13 @@ export default function PhotographyClubPage() {
                             role="Chair"
                             name="Roshan Jangir"
                             email="roshan.jangir@jklu.edu.in"
+                            image="/Photoes ID CARD Student Council/roshanjangir.jpg"
                         />
                         <LeaderCard
                             role="Co-Chair"
                             name="Meenakshi Vydianathan"
                             email="meenakshi.v@jklu.edu.in"
+                            image="/Photoes ID CARD Student Council/Meenakshi Vydianathan .HEIC"
                         />
                     </div>
                 </div>
@@ -259,11 +261,15 @@ function EventItem({ date, title, desc, status, highlight }: any) {
     );
 }
 
-function LeaderCard({ role, name, email }: any) {
+function LeaderCard({ role, name, email, image }: any) {
     return (
         <div className="flex items-center gap-6 p-6 border border-neutral-800 bg-neutral-950 hover:bg-neutral-900 transition-colors group">
-            <div className="w-16 h-16 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center group-hover:border-teal-500 transition-colors">
-                <Users className="text-neutral-500 group-hover:text-teal-500 transition-colors" />
+            <div className="w-16 h-16 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center group-hover:border-teal-500 transition-colors overflow-hidden">
+                {image ? (
+                    <img src={image} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                    <Users className="text-neutral-500 group-hover:text-teal-500 transition-colors" />
+                )}
             </div>
             <div>
                 <span className="text-teal-500 text-xs font-bold uppercase tracking-widest block mb-1">{role}</span>

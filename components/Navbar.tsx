@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useRouter, usePathname } from 'next/navigation';
-import { LogOut, User, Home, Users, BarChart3, Award, Calendar } from 'lucide-react';
+import { LogOut, User, Home, Users, BarChart3, Award, Calendar, Briefcase } from 'lucide-react';
 import BB8Switch from './BB8Switch';
 
 export default function Navbar() {
@@ -71,6 +71,9 @@ export default function Navbar() {
               </NavLink>
               <NavLink href="/councils" icon={<Award className="w-4 h-4" />}>
                 Councils
+              </NavLink>
+              <NavLink href="/coordinators" icon={<Briefcase className="w-4 h-4" />}>
+                Coordinators
               </NavLink>
 
               {user && user.role === 'student' && (

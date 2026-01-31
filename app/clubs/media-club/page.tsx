@@ -174,11 +174,13 @@ export default function MediaClubPage() {
                             name="Chestha Kulshrestha"
                             role="Chairperson"
                             color="red"
+                            image="/Photoes ID CARD Student Council/chestha kulshrestha(media club) .jpg"
                         />
                         <ProfileCard
                             name="Nikita Bhatia"
                             role="Co-Chairperson"
                             color="blue"
+                            image="/Photoes ID CARD Student Council/Nikita bhatia .PNG"
                         />
                     </div>
 
@@ -254,13 +256,17 @@ function ProgramCard({ title, category, status, desc, color }: any) {
     );
 }
 
-function ProfileCard({ name, role, color }: any) {
+function ProfileCard({ name, role, color, image }: any) {
     return (
         <div className="flex items-center gap-6 p-6 bg-slate-950 border border-slate-800 hover:border-slate-600 transition-colors relative overflow-hidden group">
             <div className={`absolute right-[-20px] top-[-20px] w-24 h-24 bg-${color}-600/10 rounded-full blur-xl group-hover:bg-${color}-600/20 transition-colors`}></div>
 
-            <div className="w-20 h-20 bg-slate-900 rounded-sm border border-slate-700 flex items-center justify-center relative z-10">
-                <Users className="w-8 h-8 text-slate-500 group-hover:text-white transition-colors" />
+            <div className="w-20 h-20 bg-slate-900 rounded-sm border border-slate-700 flex items-center justify-center relative z-10 overflow-hidden">
+                {image ? (
+                    <img src={image} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                    <Users className="w-8 h-8 text-slate-500 group-hover:text-white transition-colors" />
+                )}
             </div>
             <div className="relative z-10">
                 <h3 className="text-xl font-bold text-white mb-1 uppercase tracking-tight">{name}</h3>

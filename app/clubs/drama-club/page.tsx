@@ -153,19 +153,27 @@ export default function DramaClubPage() {
                     </div>
 
                     <div className="flex flex-wrap justify-center gap-10">
-                        {/* Chair & Co-Chair */}
-                        <LeaderCard
-                            role="Chairperson"
-                            name="Madhav Garg"
-                            quote="The stage is yours."
-                            color="red"
-                        />
-                        <LeaderCard
-                            role="Co-Chairperson"
-                            name="Gauri Singhi"
-                            quote="Act well your part."
-                            color="yellow"
-                        />
+                        {/* Chair */}
+                        <div className="bg-black/40 border border-red-900/50 p-6 rounded-xl flex flex-col items-center text-center group hover:bg-red-900/10 transition-colors">
+                            <div className="w-24 h-24 rounded-full bg-slate-900 mb-4 border-2 border-red-700 overflow-hidden">
+                                <img
+                                    src="/Photoes ID CARD Student Council/Madhav Garg (Drama Club Chair).jpeg"
+                                    alt="Madhav Garg"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-1">Madhav Garg</h3>
+                            <p className="text-red-500 text-xs font-bold uppercase tracking-widest">Chairperson</p>
+                        </div>
+
+                        {/* Co-Chair */}
+                        <div className="bg-black/40 border border-red-900/50 p-6 rounded-xl flex flex-col items-center text-center group hover:bg-red-900/10 transition-colors">
+                            <div className="w-24 h-24 rounded-full bg-slate-900 mb-4 border-2 border-red-700 flex items-center justify-center">
+                                <User className="w-10 h-10 text-red-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-1">Gauri Singhi</h3>
+                            <p className="text-red-500 text-xs font-bold uppercase tracking-widest">Co-Chairperson</p>
+                        </div>
                     </div>
                 </div>
             </section>

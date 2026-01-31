@@ -191,8 +191,16 @@ export default function CDCPage() {
 
                     {/* Chair & Co-Chair */}
                     <div className="flex flex-col md:flex-row justify-center gap-8 mb-16">
-                        <LeaderCard name="Harshal Bhansali" role="Chairperson" />
-                        <LeaderCard name="Herambh Sharma" role="Co-Chairperson" />
+                        <LeaderCard
+                            name="Harshal Bhansali"
+                            role="Chairperson"
+                            image="/Photoes ID CARD Student Council/Harshal Bhansali.jpg"
+                        />
+                        <LeaderCard
+                            name="Heramb Sharma"
+                            role="Co-Chairperson"
+                            image="/Photoes ID CARD Student Council/Heramb Sharma.jpg"
+                        />
                     </div>
 
                     {/* Coordinators */}
@@ -264,11 +272,15 @@ function UpcomingEventCard({ title, subtitle, desc }: any) {
     );
 }
 
-function LeaderCard({ name, role }: any) {
+function LeaderCard({ name, role, image }: any) {
     return (
         <div className="w-full md:w-64 bg-slate-50 border border-slate-200 p-6 rounded-2xl text-center group hover:bg-white hover:shadow-xl transition-all">
-            <div className="w-24 h-24 mx-auto bg-slate-200 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Users className="w-10 h-10 text-slate-400" />
+            <div className="w-24 h-24 mx-auto bg-slate-200 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform overflow-hidden">
+                {image ? (
+                    <img src={image} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                    <Users className="w-10 h-10 text-slate-400" />
+                )}
             </div>
             <h3 className="text-xl font-bold text-slate-900">{name}</h3>
             <p className="text-green-600 text-xs font-bold uppercase tracking-widest mt-1">{role}</p>

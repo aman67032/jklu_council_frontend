@@ -7,6 +7,7 @@ import { Moon, Star, Sun, Telescope, Rocket, Users, Calendar, MapPin, Send, Inst
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { div } from 'framer-motion/client';
 
 export default function AstronomyClubPage() {
     const { user } = useAuth();
@@ -213,11 +214,13 @@ export default function AstronomyClubPage() {
                             name="Aryan Gupta"
                             role="Chairperson"
                             rank="Commander"
+                            image="/Photoes ID CARD Student Council/Aryan Gupta (chair_nakshtra).jpg"
                         />
                         <CommanderCard
                             name="Vidhaan P Shah"
                             role="Co-Chairperson"
                             rank="Lt. Commander"
+                            image="/Photoes ID CARD Student Council/Vidhaan Shah(co-chair nakshtra).jpg"
                         />
                     </div>
 
@@ -286,13 +289,17 @@ function EventTimelineItem({ date, title, desc, icon, highlight }: any) {
     );
 }
 
-function CommanderCard({ name, role, rank }: any) {
+function CommanderCard({ name, role, rank, image }: any) {
     return (
         <div className="flex flex-col items-center p-8 bg-[#0a1120] border border-purple-500/20 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 w-64">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-            <div className="w-24 h-24 rounded-full bg-[#050B14] border-2 border-purple-500/30 flex items-center justify-center mb-4 relative z-10 group-hover:border-purple-400 transition-colors">
-                <Users className="w-10 h-10 text-slate-500 group-hover:text-white transition-colors" />
+            <div className="w-24 h-24 rounded-full bg-[#050B14] border-2 border-purple-500/30 flex items-center justify-center mb-4 relative z-10 group-hover:border-purple-400 transition-colors overflow-hidden">
+                {image ? (
+                    <img src={image} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                    <Users className="w-10 h-10 text-slate-500 group-hover:text-white transition-colors" />
+                )}
             </div>
 
             <div className="relative z-10 text-center">

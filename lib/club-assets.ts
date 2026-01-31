@@ -14,11 +14,11 @@ export const CLUB_LOGOS: Record<string, string> = {
     'drama-club': '/logos/NakabNama (With BG).png',
     'art-club': '/logos/HOA (With BG).png',
     'media-club': '/logos/Sociama (With BG).png',
-    'photography-club': '/logos/Matrix (With BG).png',
+    'photography-club': '/logos/Shade (Without BG).png', // Updated per user request
     'literary-club': '/logos/MuseInk (Without BG).png',
     'dance-club': '/logos/SteppersSquad.png',
     'music-club': '/logos/Anunaad (Without BG).png',
-    'design-club': '/logos/Shade (Without BG).png',
+    'design-club': '/logos/WhiteSpace (With BG).png',
 
     // Management/Other
     'business-club': '/logos/Corpova (Without BG).png',

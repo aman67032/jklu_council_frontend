@@ -3,264 +3,181 @@
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Search, Filter, Mail, Linkedin, User } from 'lucide-react';
+import { User, Award, Newspaper, FileText } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-// Types for our coordinators
-interface Coordinator {
-    id: string;
-    name: string;
-    role: string;
-    councilOrClub: string; // e.g., "Council of Technical Affairs" or "Art Club"
-    category: 'council' | 'club';
-    image?: string;
-    email?: string;
-    linkedin?: string;
-}
-
-// Mock Data - In a real app, this would come from an API endpoint like /api/coordinators
-const MOCK_COORDINATORS: Coordinator[] = [
-    // Council Leaders
+// Coordinator Data
+const COORDINATORS = [
     {
-        id: 'c1',
-        name: 'Yash Mishra',
-        role: 'General Secretary',
-        councilOrClub: 'Student Council',
-        category: 'council',
-        image: '/Clubs/tech_club/club_chair.png', // Using existing assets as placeholders if needed
-        email: 'gs@jklu.edu.in'
+        id: 1,
+        name: "Pulkit Dosi",
+        role: "Academic Coordinator",
+        studentId: "2024BBA067",
+        description: "Ensures smooth academic operations, addressing student concerns regarding curriculum and scheduling, and acting as a bridge between faculty and students."
     },
     {
-        id: 'c2',
-        name: 'Rashi Katiyar',
-        role: 'Technical Secretary',
-        councilOrClub: 'Council of Technical Affairs',
-        category: 'council',
-        image: '/Clubs/tech_club/Club_Co_Chair .jpg'
+        id: 2,
+        name: "Adarsh Singh",
+        role: "Placement Coordinator",
+        studentId: "2024BTECH067",
+        description: "Facilitates campus recruitment drives, coordinates with the placement cell, and organizes career development workshops for student success."
     },
     {
-        id: 'c3',
-        name: 'Jigeesha Agarawal',
-        role: 'Cultural Secretary',
-        councilOrClub: 'Cultural Council',
-        category: 'council',
-        image: '/Clubs/Art_club/Club_Chair.jpg'
-    },
-    // Art Club
-    {
-        id: 'a1',
-        name: 'Jigeesha Agarawal',
-        role: 'Chairperson',
-        councilOrClub: 'Art Club',
-        category: 'club',
-        image: '/Clubs/Art_club/Club_Chair.jpg'
+        id: 3,
+        name: "Tanik Gupta",
+        role: "Transport Coordinator",
+        studentId: "2024BTECH234",
+        description: "Manages university transport logistics, ensuring timely shuttle services and addressing all student commuting requirements."
     },
     {
-        id: 'a2',
-        name: 'Mohit Suwalka',
-        role: 'Co-Chairperson',
-        councilOrClub: 'Art Club',
-        category: 'club',
-        image: '/Clubs/Art_club/Co-chair.jpg'
+        id: 4,
+        name: "Kartavya Garhwal",
+        role: "Mess Coordinator",
+        studentId: "2024BTECH079",
+        description: "Supervises mess operations to maintain food quality and hygiene, while gathering and implementing student feedback on the menu."
     },
     {
-        id: 'a3',
-        name: 'Saumya Agarwal',
-        role: 'Creative Head',
-        councilOrClub: 'Art Club',
-        category: 'club',
-        image: '/Clubs/Art_club/Creative Head.jpg'
+        id: 5,
+        name: "Aryan Chaturvedi",
+        role: "Boys Hostel Coordinator",
+        studentId: "2024BTECH265",
+        description: "Oversees the welfare of male residents, resolving accommodation issues and ensuring a safe, disciplined hostel environment."
     },
-    // Tech Club
     {
-        id: 't1',
-        name: 'Tejendra Singh',
-        role: 'Super Coordinator',
-        councilOrClub: 'Technology Club',
-        category: 'club',
-        image: '/Clubs/tech_club/Club Super co-ordinator .jpg'
-    }
+        id: 6,
+        name: "Astha Barnwal",
+        role: "Girls Hostel Coordinator",
+        studentId: "2024BDES007",
+        description: "Ensures a secure and comfortable living environment for female students, addressing maintenance requests and fostering hostel community life."
+    },
+    {
+        id: 7,
+        name: "Himani Bohra",
+        role: "Website Coordinator",
+        studentId: "2024BTECH134",
+        description: "Maintains and updates the council's digital presence, ensuring accurate information dissemination through the official website."
+    },
+    {
+        id: 8,
+        name: "Vaibhav Khandelwal",
+        role: "Campus Ambassador",
+        studentId: "2024BTECH110",
+        description: "Represents the university in external forums, fosters inter-institutional relations, and champions the campus culture to the outside world."
+    },
+    {
+        id: 9,
+        name: "Charvi Sharma",
+        role: "Alumni Relations Coordinator",
+        studentId: "2025BBA029",
+        description: "Strengthens the bond between alumni and current students through networking events, mentorship programs, and regular engagement."
+    },
+    {
+        id: 10,
+        name: "Kaushal Malvi",
+        role: "Social Media Coordinator",
+        studentId: "2025BTECH263",
+        description: "Manages the council's social media handles, creating engaging content to cover events and keep the student body connected and informed."
+    },
 ];
 
 export default function CoordinatorsPage() {
-    const { theme } = useTheme();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filter, setFilter] = useState<'all' | 'council' | 'club'>('all');
-    const [coordinators, setCoordinators] = useState<Coordinator[]>(MOCK_COORDINATORS);
+    const [mounted, setMounted] = useState(false);
 
-    const filteredCoordinators = coordinators.filter(c => {
-        const matchesSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            c.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            c.councilOrClub.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesFilter = filter === 'all' || c.category === filter;
-        return matchesSearch && matchesFilter;
-    });
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-gray-50'}`}>
+        <div className="min-h-screen bg-[#F0F0F0] text-slate-900 font-serif selection:bg-slate-300 overflow-x-hidden relative">
             <Navbar />
 
-            {/* Background Ambient Light */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className={`absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 ${theme === 'dark' ? 'bg-purple-600' : 'bg-purple-300'}`}></div>
-                <div className={`absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 ${theme === 'dark' ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
-            </div>
-
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-6xl font-black mb-6 tracking-tight"
-                    >
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
-                            LEADERSHIP
-                        </span> DIRECTORY
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 }}
-                        className={`text-xl max-w-2xl mx-auto ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
-                    >
-                        Meet the dedicated students driving innovation and culture at JKLU.
-                    </motion.p>
+            {/* --- NEWSPAPER HEADER --- */}
+            <div className="pt-28 pb-12 px-4 max-w-7xl mx-auto text-center border-b-4 border-double border-slate-800 mb-12">
+                <div className="flex items-center justify-between mb-2 text-xs uppercase tracking-widest text-slate-500 font-sans border-b border-slate-300 pb-2">
+                    <span>Vol. 1, Issue 1</span>
+                    <span>The JKLU Council Gazette</span>
+                    <span>{new Date().toLocaleDateString()}</span>
                 </div>
-
-                {/* Filters & Search */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 sticky top-24 z-30 p-4 rounded-3xl backdrop-blur-xl border border-white/20 shadow-lg bg-white/5"
-                >
-                    <div className="relative w-full md:w-96">
-                        <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
-                        <input
-                            type="text"
-                            placeholder="Search by name, role, or club..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className={`w-full pl-12 pr-4 py-3 rounded-2xl border-none outline-none transition-all ${theme === 'dark'
-                                    ? 'bg-white/10 text-white placeholder-gray-500 focus:bg-white/20'
-                                    : 'bg-gray-100 text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-100'
-                                }`}
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-2 p-1 rounded-2xl bg-white/10 border border-white/10">
-                        {(['all', 'council', 'club'] as const).map((f) => (
-                            <button
-                                key={f}
-                                onClick={() => setFilter(f)}
-                                className={`px-6 py-2 rounded-xl text-sm font-bold capitalize transition-all ${filter === f
-                                        ? 'bg-white text-black shadow-lg'
-                                        : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                                    }`}
-                            >
-                                {f}
-                            </button>
-                        ))}
-                    </div>
-                </motion.div>
-
-                {/* Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                >
-                    <AnimatePresence>
-                        {filteredCoordinators.map((coordinator) => (
-                            <CoordinatorCard key={coordinator.id} data={coordinator} theme={theme} />
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
-
-                {filteredCoordinators.length === 0 && (
-                    <div className="text-center py-20">
-                        <p className="text-gray-500 text-xl">No leaders found matching your search.</p>
-                    </div>
-                )}
+                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 text-slate-900" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    The Coordinators
+                </h1>
+                <p className="text-xl md:text-2xl italic text-slate-700 max-w-3xl mx-auto">
+                    "Meet the dedicated team driving excellence across campus logistics, academics, and student life."
+                </p>
             </div>
+
+            {/* --- GRID LAYOUT --- */}
+            <div className="max-w-7xl mx-auto px-4 pb-24">
+                <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+                    {COORDINATORS.map((coord, index) => (
+                        <div key={coord.id} className="break-inside-avoid">
+                            <NewspaperCard coordinator={coord} index={index} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* --- FOOTER --- */}
+            <footer className="bg-slate-900 text-slate-400 py-12 text-center font-sans">
+                <div className="flex items-center justify-center gap-2 mb-4">
+                    <Newspaper className="w-5 h-5" />
+                    <span className="font-bold tracking-widest uppercase text-white">Council Press</span>
+                </div>
+                <p className="text-sm">Based on official Student Council records.</p>
+            </footer>
         </div>
     );
 }
 
-function CoordinatorCard({ data, theme }: { data: Coordinator, theme: string }) {
+function NewspaperCard({ coordinator, index }: { coordinator: any, index: number }) {
     return (
         <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className={`group relative rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${theme === 'dark'
-                    ? 'bg-[#121212] border-white/10 hover:border-blue-500/50'
-                    : 'bg-white border-gray-100 hover:border-blue-200'
-                }`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+            className="bg-[#FFFCF5] p-4 shadow-xl border border-slate-300 relative group hover:-translate-y-1 transition-transform duration-300"
         >
-            {/* Image Header */}
-            <div className="h-64 relative overflow-hidden bg-gray-200">
-                {data.image ? (
-                    <Image
-                        src={data.image}
-                        alt={data.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <User className="w-20 h-20 text-gray-400" />
-                    </div>
-                )}
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark' ? 'from-[#121212]' : 'from-white'} to-transparent opacity-80`}></div>
+            {/* Paper Texture Overlay */}
+            <div className="absolute inset-0 bg-slate-500/5 pointer-events-none mix-blend-multiply"></div>
 
-                {/* Badge */}
-                <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full backdrop-blur-md ${data.category === 'council'
-                            ? 'bg-blue-500/20 text-blue-500 border border-blue-500/30'
-                            : 'bg-pink-500/20 text-pink-500 border border-pink-500/30'
-                        }`}>
-                        {data.category}
-                    </span>
+            {/* Photo Placeholder */}
+            <div className="relative aspect-[4/5] bg-slate-200 mb-4 border-2 border-slate-800 grayscale group-hover:grayscale-0 transition-all duration-500 overflow-hidden">
+                {/* Fallback pattern or user icon if no image */}
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-300">
+                    <User className="w-24 h-24 text-slate-500 opacity-50" />
                 </div>
+
+                {/* Scanlines effect */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
             </div>
 
             {/* Content */}
-            <div className="p-6 relative -mt-12 z-10">
-                <h3 className={`text-xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {data.name}
-                </h3>
-                <p className={`text-sm font-medium mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {data.role}
-                </p>
-
-                <div className={`h-px w-full mb-4 ${theme === 'dark' ? 'bg-white/10' : 'bg-gray-100'}`}></div>
-
-                <p className={`text-xs font-bold uppercase tracking-wider mb-6 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
-                    }`}>
-                    {data.councilOrClub}
-                </p>
-
-                {/* Social Actions */}
-                <div className="flex gap-2">
-                    {data.email && (
-                        <a href={`mailto:${data.email}`} className={`p-2 rounded-xl transition-colors ${theme === 'dark' ? 'bg-white/5 hover:bg-blue-600 hover:text-white text-gray-400' : 'bg-gray-100 hover:bg-blue-500 hover:text-white text-gray-600'
-                            }`}>
-                            <Mail className="w-4 h-4" />
-                        </a>
-                    )}
-                    {data.linkedin && (
-                        <a href={data.linkedin} target="_blank" rel="noreferrer" className={`p-2 rounded-xl transition-colors ${theme === 'dark' ? 'bg-white/5 hover:bg-blue-700 hover:text-white text-gray-400' : 'bg-gray-100 hover:bg-blue-700 hover:text-white text-gray-600'
-                            }`}>
-                            <Linkedin className="w-4 h-4" />
-                        </a>
-                    )}
+            <div className="relative z-20 text-center font-serif">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1 border-b-2 border-slate-800 inline-block pb-1">
+                    {coordinator.name}
+                </h2>
+                <div className="my-3">
+                    <p className="text-sm font-bold uppercase tracking-widest text-slate-600 font-sans mb-1">
+                        {coordinator.role}
+                    </p>
+                    <p className="text-xs font-mono text-slate-500">
+                        ID: {coordinator.studentId}
+                    </p>
                 </div>
+
+                {/* Decorative Text */}
+                <p className="text-[10px] text-justify text-slate-800 leading-tight opacity-90 mt-4 font-sans font-medium">
+                    {coordinator.description}
+                </p>
             </div>
+
+            {/* Pin/Tape Effect */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-8 bg-yellow-100/80 shadow-sm transform -rotate-2 border border-yellow-200/50"></div>
         </motion.div>
     );
 }
+

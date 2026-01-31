@@ -9,14 +9,32 @@ import { Calendar, MapPin, Award, Users, Info, Image as ImageIcon, ChevronRight,
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-// Roster Data (Duplicated for availability in dynamic route)
-const councilRoster: Record<string, { genSec: string; sec: string }> = {
-  'academic-affairs': { genSec: 'Kopal Jain', sec: 'Bhupathi Likhitha' },
-  'cultural-affairs': { genSec: 'Divya Krishnani', sec: 'Rishika Singh' },
-  'campus-life': { genSec: 'Aman Gupta', sec: 'Aditya Nayak' },
-  'technical-affairs': { genSec: 'Suryaansh Sharma', sec: 'Aman Pratap Singh' },
-  'sports-affairs': { genSec: 'Ishaan Saraswat', sec: 'Aman Prakash' },
-  'public-relations': { genSec: 'Diya Garg', sec: 'Vaishnavi Shukla' },
+// Roster Data
+const councilRoster: Record<string, { genSec: any; sec: any }> = {
+  'academic-affairs': {
+    genSec: { name: 'Kopal Jain', image: '/Photoes ID CARD Student Council/kopaljain_gensec_academicaffairs.jpg', phone: '8839921638', id: '2023btech044' },
+    sec: { name: 'Bhupathi Likhitha', image: null, phone: '6304774047', id: '2024btech218' } // Image missing
+  },
+  'cultural-affairs': {
+    genSec: { name: 'Divya Krishnani', image: '/Photoes ID CARD Student Council/Divya Krishnani.jpeg', phone: '7800879161', id: '2023bdes019' },
+    sec: { name: 'Rishika Singh', image: '/Photoes ID CARD Student Council/Rishika Singh.jpg', phone: '7300118679', id: '2024btech168' }
+  },
+  'campus-life': {
+    genSec: { name: 'Aman Gupta', image: '/Photoes ID CARD Student Council/Aman Gupta.jpg', phone: '8950739040', id: '2024btech162' },
+    sec: { name: 'Aditya Nayak', image: '/Photoes ID CARD Student Council/Aditya Nayak.jpg', phone: '9116727168', id: '2024btech032' }
+  },
+  'technical-affairs': {
+    genSec: { name: 'Suryaansh Sharma', image: '/Photoes ID CARD Student Council/suryaansh(genSecTech).jpeg', phone: '6376905585', id: '2023btech086' },
+    sec: { name: 'Aman Pratap Singh', image: null, phone: '9456608637', id: '2024bTech136' } // Image missing
+  },
+  'sports-affairs': {
+    genSec: { name: 'Ishaan Saraswat', image: '/Photoes ID CARD Student Council/Ishaan_Saraswat.webp', phone: '9772134536', id: '2022btech042' },
+    sec: { name: 'Aman Prakash', image: '/Photoes ID CARD Student Council/Aman Prakash (sports secretary)jpg.jpg', phone: '7033676488', id: '2024btech021' }
+  },
+  'public-relations': {
+    genSec: { name: 'Diya Garg', image: '/Photoes ID CARD Student Council/Diya Garg.webp', phone: '7296859397', id: '2023btech027' },
+    sec: { name: 'Vaishnavi Shukla', image: '/Photoes ID CARD Student Council/Vaishnavi Shukla.jpg', phone: '8769276288', id: '2024btech143' }
+  },
 };
 
 const getCouncilIcon = (slug: string) => {
@@ -122,30 +140,60 @@ export default function CouncilDetailPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
           >
+            {/* General Secretary */}
             <div className="relative bg-slate-900/40 border border-white/10 p-6 rounded-2xl flex items-center gap-6 overflow-hidden group">
               <div className="absolute inset-0 bg-emerald-500/5 group-hover:bg-emerald-500/10 transition-colors"></div>
-              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 relative z-10 text-emerald-500 font-bold text-xl">
-                {leaders.genSec.charAt(0)}
+              <div className="w-24 h-24 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 relative z-10 overflow-hidden shrink-0">
+                {leaders.genSec.image ? (
+                  <div className="w-full h-full relative">
+                    <img /* Using img for external path if Image doesn't work with spaces or absolute */
+                      src={leaders.genSec.image}
+                      alt={leaders.genSec.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <span className="text-emerald-500 font-bold text-xl">{leaders.genSec.name.charAt(0)}</span>
+                )}
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-white mb-1">{leaders.genSec}</h3>
-                <div className="flex items-center gap-2">
+                <h3 className="text-2xl font-bold text-white mb-1">{leaders.genSec.name}</h3>
+                <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">General Secretary</p>
+                </div>
+                <div className="text-xs text-slate-500 font-mono space-y-1">
+                  {leaders.genSec.phone && <p>Ph: {leaders.genSec.phone}</p>}
+                  {leaders.genSec.id && <p>ID: {leaders.genSec.id}</p>}
                 </div>
               </div>
             </div>
 
+            {/* Secretary */}
             <div className="relative bg-slate-900/40 border border-white/10 p-6 rounded-2xl flex items-center gap-6 overflow-hidden group">
               <div className="absolute inset-0 bg-blue-500/5 group-hover:bg-blue-500/10 transition-colors"></div>
-              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 relative z-10 text-blue-500 font-bold text-xl">
-                {leaders.sec.charAt(0)}
+              <div className="w-24 h-24 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 relative z-10 overflow-hidden shrink-0">
+                {leaders.sec.image ? (
+                  <div className="w-full h-full relative">
+                    <img
+                      src={leaders.sec.image}
+                      alt={leaders.sec.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <span className="text-blue-500 font-bold text-xl">{leaders.sec.name.charAt(0)}</span>
+                )}
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-white mb-1">{leaders.sec}</h3>
-                <div className="flex items-center gap-2">
+                <h3 className="text-2xl font-bold text-white mb-1">{leaders.sec.name}</h3>
+                <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
                   <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Secretary</p>
+                </div>
+                <div className="text-xs text-slate-500 font-mono space-y-1">
+                  {leaders.sec.phone && <p>Ph: {leaders.sec.phone}</p>}
+                  {leaders.sec.id && <p>ID: {leaders.sec.id}</p>}
                 </div>
               </div>
             </div>

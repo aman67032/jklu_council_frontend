@@ -42,6 +42,31 @@ export default function ClubsPage() {
         return { color: 'emerald', icon: <Users />, gradient: 'from-emerald-500 to-teal-600', bg: 'default-pattern' };
     };
 
+    const displayedSlugs = new Set();
+    const uniqueFilteredClubs = filteredClubs.reduce((acc: any[], club) => {
+        let displayClub = { ...club };
+
+        // Normalize slugs
+        if (club.slug === 'astro-club') {
+            displayClub.name = 'Astronomy Club';
+            displayClub.slug = 'astronomy-club';
+        }
+        if (club.slug === 'media-club') {
+            displayClub.name = 'Media Club';
+        }
+        if (club.slug === 'business-club') {
+            displayClub.name = 'Corpova';
+        }
+
+        // Deduplicate based on normalized slug
+        if (!displayedSlugs.has(displayClub.slug)) {
+            displayedSlugs.add(displayClub.slug);
+            acc.push(displayClub);
+        }
+
+        return acc;
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500 selection:text-black overflow-x-hidden">
             <div className="fixed inset-0 z-0 bg-[url('/noise.png')] opacity-5 pointer-events-none"></div>
@@ -86,25 +111,12 @@ export default function ClubsPage() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {filteredClubs.map((club, index) => {
-                            // Data overrides for specific clubs (fixing backend typos/slugs)
-                            let displayClub = { ...club };
-                            if (club.slug === 'astro-club') {
-                                displayClub.name = 'Astronomy Club';
-                                displayClub.slug = 'astronomy-club';
-                            }
-                            if (club.slug === 'media-club') {
-                                displayClub.name = 'Media Club'; // Ensure consistency if backend differs
-                            }
-                            if (club.slug === 'business-club') {
-                                displayClub.name = 'Corpova';
-                            }
-
+                        {uniqueFilteredClubs.map((displayClub: any, index: number) => {
                             const theme = getClubTheme(displayClub.name);
                             return (
                                 <Link
                                     href={`/clubs/${displayClub.slug}`}
-                                    key={club.id}
+                                    key={displayClub.slug + index}
                                     className="group relative h-[420px] bg-slate-900/40 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-600 transition-all duration-500 hover:shadow-[0_0_30px_rgba(2,6,23,0.8)] flex flex-col"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >

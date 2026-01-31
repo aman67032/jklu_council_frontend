@@ -181,6 +181,7 @@ export default function DesignClubPage() {
                     <CleanProfile
                         name="Purvi Jain"
                         role="Co-Chairperson"
+                        image="/Photoes ID CARD Student Council/Purvi Jain.jpg"
                     />
                 </div>
 
@@ -202,7 +203,7 @@ export default function DesignClubPage() {
                 <h2 className="text-3xl font-black uppercase mb-8">Space for Creative Clarity</h2>
                 <div className="flex justify-center gap-8">
                     <SocialLink href="mailto:designclub@jklu.edu.in" icon={<Send />} label="Email" />
-                    <SocialLink href="https://www.instagram.com/white_space_jklu?igsh=MTZ5Mzd2cW9wNWVhYg==" icon={<Instagram />} label="Instagram" />
+                    <SocialLink href="https://www.instagram.com/white_space_jklu?igsh=MTZMzd2cW9wNWVhYg==" icon={<Instagram />} label="Instagram" />
                 </div>
             </div>
         </div>
@@ -256,12 +257,16 @@ function ProjectCard({ title, category, desc, status }: any) {
     );
 }
 
-function CleanProfile({ name, role }: any) {
+function CleanProfile({ name, role, image }: any) {
     return (
         <div className="text-center group">
             <div className="w-40 h-40 mx-auto bg-gray-100 rounded-full mb-6 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-500">
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                    <Users className="w-12 h-12 text-gray-400" />
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 overflow-hidden">
+                    {image ? (
+                        <img src={image} alt={name} className="w-full h-full object-cover" />
+                    ) : (
+                        <Users className="w-12 h-12 text-gray-400" />
+                    )}
                 </div>
             </div>
             <h3 className="text-2xl font-bold uppercase mb-2">{name}</h3>

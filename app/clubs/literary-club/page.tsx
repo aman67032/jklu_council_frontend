@@ -186,11 +186,13 @@ export default function LiteraryClubPage() {
                         name="Anushka Singhal"
                         role="Chairperson"
                         initial="A"
+                        image="/Photoes ID CARD Student Council/anushka singhal .jpg"
                     />
                     <PortraitCard
                         name="Pragya Verma"
                         role="Co-Chairperson"
                         initial="P"
+                        image="/Photoes ID CARD Student Council/pragya verma.jpg"
                     />
                 </div>
 
@@ -272,7 +274,7 @@ function EventCard({ title, date, desc, icon, highlight }: any) {
     );
 }
 
-function PortraitCard({ name, role, initial }: any) {
+function PortraitCard({ name, role, initial, image }: any) {
     return (
         <div className="flex flex-col items-center text-center group">
             <div className="w-32 h-40 bg-[#eecfa1]/20 border border-[#2c1810]/20 mb-6 flex items-center justify-center relative overflow-hidden shadow-inner">
@@ -282,7 +284,11 @@ function PortraitCard({ name, role, initial }: any) {
                 <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-[#2c1810]"></div>
                 <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-[#2c1810]"></div>
 
-                <span className="text-6xl font-serif text-[#2c1810]/10 font-black group-hover:scale-110 transition-transform duration-500">{initial}</span>
+                {image ? (
+                    <img src={image} alt={name} className="w-full h-full object-cover" />
+                ) : (
+                    <span className="text-6xl font-serif text-[#2c1810]/10 font-black group-hover:scale-110 transition-transform duration-500">{initial}</span>
+                )}
             </div>
             <h3 className="text-xl font-bold text-[#2c1810] mb-1 italic">{name}</h3>
             <p className="text-[#8b5a2b] text-xs font-sans font-bold uppercase tracking-widest">{role}</p>

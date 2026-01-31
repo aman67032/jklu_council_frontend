@@ -192,6 +192,7 @@ export default function BusinessClubPage() {
                             name="Garvishtha Asnani"
                             role="Co-Chairperson"
                             initial="G"
+                            image="/Photoes ID CARD Student Council/Garvishta Asnani .jpg"
                         />
                     </div>
 
@@ -282,12 +283,16 @@ function EventCard({ title, type, date, desc, highlight }: any) {
     );
 }
 
-function ExecutiveProfile({ name, role, initial }: any) {
+function ExecutiveProfile({ name, role, initial, image }: any) {
     return (
         <div className="text-center group">
-            <div className="w-32 h-32 mx-auto bg-gradient-to-b from-slate-200 to-slate-400 rounded-full mb-6 p-1 relative overflow-hidden ring-4 ring-[#233554] group-hover:ring-amber-500 transition-all duration-300">
-                <div className="w-full h-full bg-[#0a192f] rounded-full flex items-center justify-center">
-                    <span className="text-4xl font-black text-slate-700 select-none group-hover:text-amber-500 transition-colors">{initial}</span>
+            <div className="w-32 h-32 mx-auto bg-gradient-to-b from-slate-200 to-slate-400 rounded-full mb-6 p-1 relative overflow-hidden ring-4 ring-[#233554] group-hover:ring-amber-500 transition-all duration-300 pointer-events-none">
+                <div className="w-full h-full bg-[#0a192f] rounded-full flex items-center justify-center overflow-hidden">
+                    {image ? (
+                        <img src={image} alt={name} className="w-full h-full object-cover" />
+                    ) : (
+                        <span className="text-4xl font-black text-slate-700 select-none group-hover:text-amber-500 transition-colors">{initial}</span>
+                    )}
                 </div>
             </div>
             <h3 className="text-xl font-bold text-white mb-1">{name}</h3>
