@@ -13,38 +13,31 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('light');
+    const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
 
     const updateTheme = (newTheme: Theme) => {
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
+        // Always force dark
+        const forcedTheme = 'dark';
+        setTheme(forcedTheme);
+        localStorage.setItem('theme', forcedTheme);
 
-        if (newTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.documentElement.style.colorScheme = 'dark';
-        } else {
-            document.documentElement.classList.remove('dark');
-            document.documentElement.style.colorScheme = 'light';
-        }
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
     };
 
     useEffect(() => {
-        // Check local storage or system preference
-        const savedTheme = localStorage.getItem('theme') as Theme;
-        if (savedTheme) {
-            updateTheme(savedTheme);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            updateTheme('dark');
-        }
+        // Enforce dark mode on mount
+        updateTheme('dark');
     }, []);
 
     const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        updateTheme(newTheme);
+        // Disable toggling
+        updateTheme('dark');
     };
 
     const setMode = (mode: Theme) => {
-        updateTheme(mode);
+        // Disable mode setting
+        updateTheme('dark');
     };
 
     return (

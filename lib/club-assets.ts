@@ -9,6 +9,7 @@ export const CLUB_LOGOS: Record<string, string> = {
     'technology-club': '/logos/TechClub (With BG).png',
     'astronomy-club': '/logos/Nakshatra (Without BG).png', // Only without BG available or preferred?
     'astro-club': '/logos/Nakshatra (Without BG).png', // handle alias
+    'cp-club': '/logos/Matrix (With BG).png',
 
     // Cultural Council
     'drama-club': '/logos/NakabNama (With BG).png',

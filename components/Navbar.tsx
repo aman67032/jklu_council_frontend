@@ -96,11 +96,7 @@ export default function Navbar() {
 
           {/* Right Text / Actions */}
           <div className="flex items-center space-x-6">
-            {!isTechClub && !isMusicClub && !isRoboticsClub && !isDramaClub && !isPhotographyClub && !isLiteraryClub && !isMediaClub && !isAstronomyClub && !isDesignClub && !isBusinessClub && (
-              <div className="scale-75 origin-right hover:rotate-12 transition-transform duration-500">
-                <BB8Switch />
-              </div>
-            )}
+
 
             {user ? (
               <div className="flex items-center gap-4 pl-4 border-l border-white/10">
