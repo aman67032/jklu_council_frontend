@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Camera, Aperture, Image as ImageIcon, Users, Eye, Layers, Calendar, MapPin, ChevronRight, Instagram, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
@@ -66,10 +67,13 @@ export default function PhotographyClubPage() {
                         className="mb-8 relative"
                     >
                         <div className="absolute inset-0 bg-teal-500/20 blur-[50px] rounded-full"></div>
-                        <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full border border-neutral-700 flex items-center justify-center bg-neutral-900/50 backdrop-blur-sm">
-                            <div className="absolute inset-2 border border-neutral-600 rounded-full"></div>
-                            <div className="absolute inset-8 border-4 border-teal-500/30 rounded-full"></div>
-                            <Aperture className="w-16 h-16 md:w-24 md:h-24 text-teal-400" />
+                        <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full border border-neutral-700 flex items-center justify-center bg-neutral-900/50 backdrop-blur-sm overflow-hidden">
+                            <Image
+                                src="/logos/Matrix (With BG).png"
+                                alt="Photography Club Logo"
+                                fill
+                                className="object-cover"
+                            />
                         </div>
                     </motion.div>
 

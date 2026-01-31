@@ -49,7 +49,7 @@ export default function ArtClubPage() {
                         className="relative w-56 h-56 md:w-72 md:h-72 mb-10 drop-shadow-2xl"
                     >
                         <Image
-                            src="/Clubs/Art_club/logo.jpg"
+                            src="/logos/HOA (With BG).png"
                             alt="Art Club Logo"
                             fill
                             className="object-contain drop-shadow-2xl"

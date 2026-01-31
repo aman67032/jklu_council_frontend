@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import api from '@/lib/api';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Award, ChevronRight, Users, Gavel, BookOpen, Heart, Activity, Globe, Megaphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getCouncilLogo } from '@/lib/club-assets';
 
 export default function CouncilsPage() {
     const [councils, setCouncils] = useState<any[]>([]);
@@ -91,10 +93,13 @@ export default function CouncilsPage() {
                         <div className="max-w-md mx-auto relative group cursor-default">
                             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-purple-600/20 blur-xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
                             <div className="relative bg-slate-900/60 border border-amber-500/30 backdrop-blur-xl p-8 rounded-2xl flex flex-col items-center">
-                                <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full p-1 mb-4 shadow-lg shadow-amber-500/20">
-                                    <div className="w-full h-full bg-slate-900 rounded-full flex items-center justify-center">
-                                        <Award className="w-10 h-10 text-amber-500" />
-                                    </div>
+                                <div className="w-32 h-32 relative mb-4 group-hover:scale-105 transition-transform duration-500">
+                                    <Image
+                                        src="/logos/GreyPanel (With BG).png"
+                                        alt="President Logo"
+                                        fill
+                                        className="object-contain drop-shadow-xl"
+                                    />
                                 </div>
                                 <h2 className="text-2xl font-black text-white mb-1">Shubham Jain</h2>
                                 <div className="px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-xs font-bold uppercase tracking-widest">
@@ -140,11 +145,22 @@ export default function CouncilsPage() {
                                         {/* Content */}
                                         <div className="p-8 h-full flex flex-col relative z-10">
                                             <div className="flex justify-between items-start mb-8">
-                                                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} p-0.5 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                                                    <div className="w-full h-full bg-[#0a1525] rounded-[14px] flex items-center justify-center text-white">
-                                                        {icon}
+                                                {getCouncilLogo(council.slug) ? (
+                                                    <div className="w-20 h-20 relative group-hover:scale-110 transition-transform duration-500">
+                                                        <Image
+                                                            src={getCouncilLogo(council.slug)!}
+                                                            alt={`${council.name} logo`}
+                                                            fill
+                                                            className="object-contain drop-shadow-lg"
+                                                        />
                                                     </div>
-                                                </div>
+                                                ) : (
+                                                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} p-0.5 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                                                        <div className="w-full h-full bg-[#0a1525] rounded-[14px] flex items-center justify-center text-white">
+                                                            {icon}
+                                                        </div>
+                                                    </div>
+                                                )}
 
                                                 <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 group-hover:bg-white group-hover:text-black group-hover:border-transparent transition-all duration-300">
                                                     <ChevronRight className="w-5 h-5" />

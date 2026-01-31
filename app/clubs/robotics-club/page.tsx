@@ -65,10 +65,15 @@ export default function RoboticsClubPage() {
                     className="mb-8 relative"
                 >
                     <div className="absolute inset-0 bg-amber-500/20 blur-[60px] rounded-full animate-pulse"></div>
-                    <div className="relative w-48 h-48 mx-auto bg-slate-900 clip-path-hexagon flex items-center justify-center border-4 border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.3)]">
-                        <Cpu className="w-24 h-24 text-amber-500" />
+                    <div className="relative w-64 h-64 mx-auto flex items-center justify-center">
+                        <Image
+                            src="/logos/ARC (With BG).png"
+                            alt="Robotics Club Logo"
+                            fill
+                            className="object-contain drop-shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+                        />
                         {/* Rotating ring effect */}
-                        <div className="absolute inset-0 border-2 border-dashed border-amber-500/30 rounded-full animate-spin-slow pointer-events-none w-[140%] h-[140%] -left-[20%] -top-[20%]"></div>
+                        <div className="absolute inset-0 border-2 border-dashed border-amber-500/30 rounded-full animate-spin-slow pointer-events-none w-[120%] h-[120%] -left-[10%] -top-[10%]"></div>
                     </div>
                 </motion.div>
 

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Drama, Mic, Film, Star, Users, Video, Calendar, MapPin, Heart, Sparkles, User, PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -55,10 +56,14 @@ export default function DramaClubPage() {
                     {/* Spotlight Beam */}
                     <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-1 h-[300px] bg-gradient-to-b from-white/0 via-white/10 to-transparent blur-md"></div>
 
-                    <div className="relative w-48 h-48 mx-auto flex items-center justify-center">
+                    <div className="relative w-64 h-64 mx-auto flex items-center justify-center">
                         <div className="absolute inset-0 border-2 border-red-800 rounded-full animate-spin-slow opacity-30"></div>
-                        <div className="absolute inset-4 border border-yellow-600/50 rounded-full"></div>
-                        <Drama className="w-24 h-24 text-red-600 drop-shadow-[0_0_25px_rgba(220,38,38,0.6)]" />
+                        <Image
+                            src="/logos/NakabNama (With BG).png"
+                            alt="Drama Club Logo"
+                            fill
+                            className="object-contain drop-shadow-[0_0_25px_rgba(220,38,38,0.6)]"
+                        />
                     </div>
                 </motion.div>
 

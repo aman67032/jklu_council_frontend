@@ -55,7 +55,7 @@ export default function TechnologyClubPage() {
                     {/* Tech Club Logo */}
                     <div className="relative w-32 h-32 md:w-40 md:h-40 mb-8 rounded-full overflow-hidden border-4 border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.4)] animate-fade-in-up hover:scale-105 transition-transform duration-500 bg-black">
                         <Image
-                            src="/Clubs/tech_club/logo.jpg"
+                            src="/logos/TechClub (With BG).png"
                             alt="Tech Club Logo"
                             fill
                             className="object-cover"

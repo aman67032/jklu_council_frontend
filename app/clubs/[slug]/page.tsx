@@ -5,7 +5,9 @@ import { useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import api from '@/lib/api';
 import { format } from 'date-fns';
+import Image from 'next/image';
 import { Calendar, MapPin, Users, Mail, User, Info, Image as ImageIcon } from 'lucide-react';
+import { getClubLogo } from '@/lib/club-assets';
 
 // Helper to generate a consistent theme color based on string
 const getThemeColor = (str: string) => {
@@ -84,8 +86,17 @@ export default function ClubDetailPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
-          <div className="w-32 h-32 md:w-40 md:h-40 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center border-4 border-white/30 shadow-2xl">
-            <Users className="w-16 h-16 text-white" />
+          <div className="w-32 h-32 md:w-40 md:h-40 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center border-4 border-white/30 shadow-2xl relative overflow-hidden">
+            {getClubLogo(club.slug) ? (
+              <Image
+                src={getClubLogo(club.slug)!}
+                alt={`${club.name} logo`}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <Users className="w-16 h-16 text-white" />
+            )}
           </div>
           <div className="text-center md:text-left">
             <h1 className="text-4xl md:text-6xl font-black mb-2 tracking-tight">{club.name}</h1>

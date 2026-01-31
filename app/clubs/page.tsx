@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import api from '@/lib/api';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Users, ChevronRight, Search, Code, Palette, Music, Trophy, Globe, Zap, Cpu, Activity } from 'lucide-react';
+import { getClubLogo } from '@/lib/club-assets';
 
 export default function ClubsPage() {
     const [clubs, setClubs] = useState<any[]>([]);
@@ -121,9 +123,20 @@ export default function ClubsPage() {
 
                                     {/* Icon / Logo Section */}
                                     <div className="relative p-8 pb-0 pt-10">
-                                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center text-white shadow-lg mb-6 group-hover:scale-110 transition-transform duration-500`}>
-                                            {theme.icon}
-                                        </div>
+                                        {getClubLogo(displayClub.slug) ? (
+                                            <div className="w-20 h-20 relative mb-6 group-hover:scale-110 transition-transform duration-500">
+                                                <Image
+                                                    src={getClubLogo(displayClub.slug)!}
+                                                    alt={`${displayClub.name} logo`}
+                                                    fill
+                                                    className="object-contain drop-shadow-lg"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center text-white shadow-lg mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                                                {theme.icon}
+                                            </div>
+                                        )}
 
                                         {displayClub.council_name && (
                                             <div className="absolute top-8 right-8 px-3 py-1 rounded-full bg-slate-950/50 border border-slate-700/50 text-xs font-bold tracking-wider text-slate-400 uppercase backdrop-blur-md">
