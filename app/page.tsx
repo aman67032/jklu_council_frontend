@@ -71,7 +71,11 @@ export default function Home() {
     : ['#FF6600', '#FF9944', '#0066FF', '#3399FF']; // Lighter variants for light mode
 
   if (isCheckingLanding) {
-    return <div className="min-h-screen bg-black" />;
+    return (
+      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   if (showLanding) {
