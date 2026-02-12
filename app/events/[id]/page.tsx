@@ -93,9 +93,23 @@ export default function EventDetailPage() {
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'}`}></div>
-          {/* Ambient Blobs */}
-          <div className={`absolute top-0 right-0 w-[800px] h-[800px] rounded-full blur-[120px] opacity-20 ${theme === 'dark' ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
-          <div className={`absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-[100px] opacity-20 ${theme === 'dark' ? 'bg-[var(--primary)]' : 'bg-orange-300'}`}></div>
+          {/* Event Image Background */}
+          {event.image_url ? (
+            <>
+              <img
+                src={event.image_url}
+                alt={event.title}
+                className="absolute inset-0 w-full h-full object-cover opacity-60"
+              />
+              <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark' ? 'from-black via-black/50 to-transparent' : 'from-white via-white/50 to-transparent'}`}></div>
+            </>
+          ) : (
+            <>
+              {/* Ambient Blobs */}
+              <div className={`absolute top-0 right-0 w-[800px] h-[800px] rounded-full blur-[120px] opacity-20 ${theme === 'dark' ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
+              <div className={`absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-[100px] opacity-20 ${theme === 'dark' ? 'bg-[var(--primary)]' : 'bg-orange-300'}`}></div>
+            </>
+          )}
         </div>
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -324,8 +338,8 @@ function FeedbackForm({ eventId, theme }: { eventId: string, theme: string }) {
         <textarea
           rows={4}
           className={`w-full rounded-2xl p-4 transition-all outline-none border-2 focus:border-[var(--primary)] ${theme === 'dark'
-              ? 'bg-black/20 border-white/10 text-white placeholder-gray-600'
-              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+            ? 'bg-black/20 border-white/10 text-white placeholder-gray-600'
+            : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
             }`}
           placeholder="Share your thoughts..."
           value={comment}

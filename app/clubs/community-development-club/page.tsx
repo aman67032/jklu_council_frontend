@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function CDCPage() {
     const { user } = useAuth();
@@ -15,9 +17,26 @@ export default function CDCPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
 
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
+
     useEffect(() => {
         setMounted(true);
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/community-development-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -159,23 +178,35 @@ export default function CDCPage() {
                                 <span className="p-2 bg-green-100 text-green-700 rounded-lg"><Sun className="w-5 h-5" /></span>
                                 The Path Ahead (Upcoming)
                             </h3>
-                            <div className="space-y-6">
-                                <UpcomingEventCard
-                                    title="Expeditions to NGOs"
-                                    subtitle="Orphanages & Welfare Orgs"
-                                    desc="Visits to NGOs, old age homes, and orphanages for donation drives and interaction sessions."
-                                />
-                                <UpcomingEventCard
-                                    title="Health Camps"
-                                    subtitle="Student Welfare"
-                                    desc="On-campus health camps including dental check-ups and complete body examinations."
-                                />
-                                <UpcomingEventCard
-                                    title="Cleanliness Trek"
-                                    subtitle="Environmental Awareness"
-                                    desc="A trek focused on cleaning trails while learning about waste management and nature conservation."
-                                />
-                            </div>
+                            {loadingEvents ? (
+                                <div className="flex justify-center py-20">
+                                    <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            ) : events.length > 0 ? (
+                                <div className="grid grid-cols-1 gap-6">
+                                    {events.map((event) => (
+                                        <ClubEventCard
+                                            key={event.id}
+                                            id={event.id}
+                                            title={event.title}
+                                            date={event.start_date}
+                                            venue={event.venue}
+                                            imageUrl={event.image_url}
+                                            status={event.status}
+                                            desc={event.description}
+                                            color="text-green-600"
+                                            bg="bg-green-50"
+                                            border="group-hover:border-green-400"
+                                            is_enrolled={event.is_enrolled}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
+                                    <Leaf className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                                    <p className="text-slate-500 font-medium">No upcoming paths currently mapped.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

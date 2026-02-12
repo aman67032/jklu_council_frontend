@@ -7,6 +7,8 @@ import { Feather, BookOpen, PenTool, Scroll, Users, Edit3, Calendar, MapPin, Cof
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function LiteraryClubPage() {
     const { user } = useAuth();
@@ -15,13 +17,29 @@ export default function LiteraryClubPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
     const { scrollY } = useScroll();
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     const yBackground = useTransform(scrollY, [0, 1000], [0, 200]);
 
     useEffect(() => {
         setMounted(true);
         setMode('light'); // Force light mode for the parchment aesthetic
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/literary-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -158,20 +176,36 @@ export default function LiteraryClubPage() {
                 <div className="max-w-6xl mx-auto px-4">
                     <SectionHeader title="Upcoming Volumes" subtitle="Chapter II" center />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-                        <EventCard
-                            title="Bonfire Reading Night"
-                            date="Winter Session"
-                            desc="A cozy winter reading and storytelling session."
-                            icon={<Coffee />}
-                        />
-                        <EventCard
-                            title="Poetry Writing Competition"
-                            date="Last Week of Jan"
-                            desc="Bilingual (Hindi & English) poetry contest. Selected entries published."
-                            icon={<Scroll />}
-                            highlight
-                        />
+                    <div className="max-w-6xl mx-auto px-4 mt-12">
+                        {loadingEvents ? (
+                            <div className="flex justify-center py-20">
+                                <div className="w-12 h-12 border-4 border-[#8b5a2b] border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        ) : events.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {events.map((event) => (
+                                    <ClubEventCard
+                                        key={event.id}
+                                        id={event.id}
+                                        title={event.title}
+                                        date={event.start_date}
+                                        venue={event.venue}
+                                        imageUrl={event.image_url}
+                                        status={event.status}
+                                        desc={event.description}
+                                        color="text-[#2c1810]"
+                                        bg="bg-[#fffef5]"
+                                        border="group-hover:border-[#8b5a2b]"
+                                        is_enrolled={event.is_enrolled}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-[#fffef5] rounded-xl border border-dashed border-[#8b5a2b]/30">
+                                <Scroll className="w-12 h-12 text-[#8b5a2b] mx-auto mb-4" />
+                                <p className="text-[#5d4037] font-medium font-serif">No volumes currently unpublished.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>

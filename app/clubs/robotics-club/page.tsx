@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function RoboticsClubPage() {
     const { user } = useAuth();
@@ -15,11 +17,27 @@ export default function RoboticsClubPage() {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     useEffect(() => {
         setMounted(true);
         setMode('dark');
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/robotics-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -182,40 +200,35 @@ export default function RoboticsClubPage() {
                 <div className="max-w-7xl mx-auto px-4">
                     <SectionHeader title="Operations Log" subtitle="Recent & Upcoming Activities" />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-                        {/* Upcoming Operation */}
-                        <div className="group relative bg-slate-950 border border-slate-700/50 p-8 hover:border-amber-500/50 transition-all duration-300">
-                            <div className="absolute top-0 right-0 p-2 bg-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider">Upcoming</div>
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3 bg-amber-500/10 text-amber-500 rounded-sm border border-amber-500/20"><Calendar className="w-6 h-6" /></div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">Intro to Competitive Robotics</h3>
-                                    <p className="text-slate-500 text-sm font-mono">13 JAN 2026 • WORKSHOP</p>
-                                </div>
-                            </div>
-                            <p className="text-slate-400 mb-6">
-                                A foundational session introducing students to competitive robotics, including a basic overview of robotics concepts and a live demonstration working robot.
-                            </p>
-                            <button className="text-amber-500 text-sm font-bold tracking-widest uppercase hover:text-white transition-colors flex items-center gap-2">
-                                System Details <ChevronRight className="w-4 h-4" />
-                            </button>
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
                         </div>
-
-                        {/* Past Operation */}
-                        <div className="group relative bg-slate-950 border border-slate-700/50 p-8 hover:border-slate-500 transition-all duration-300 opacity-80 hover:opacity-100">
-                            <div className="absolute top-0 right-0 p-2 bg-slate-800 text-slate-400 font-bold text-xs uppercase tracking-wider">Archived</div>
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3 bg-slate-800 text-slate-400 rounded-sm"><Settings className="w-6 h-6" /></div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-slate-300">RoboSoccer Bot Making</h3>
-                                    <p className="text-slate-600 text-sm font-mono">PREVIOUS YEAR • WORKSHOP</p>
-                                </div>
-                            </div>
-                            <p className="text-slate-500 mb-6">
-                                Hands-on workshop where students designed and built their own soccer-playing robots, learning mechanical design and basic control systems.
-                            </p>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-amber-500"
+                                    bg="bg-amber-500/10"
+                                    border="group-hover:border-amber-500/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
                         </div>
-                    </div>
+                    ) : (
+                        <div className="text-center py-12 mt-12 bg-slate-900/50 rounded-2xl border border-slate-700 border-dashed">
+                            <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+                            <p className="text-slate-500 font-medium">No operations currently scheduled.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

@@ -335,6 +335,20 @@ export default function Home() {
                           </div>
                         </div>
 
+                        {event.image_url && (
+                          <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative">
+                            <img
+                              src={event.image_url}
+                              alt={event.title}
+                              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                          </div>
+                        )}
+
                         <h4 className="text-xl font-bold text-[var(--text-primary)] mb-4 group-hover:text-[var(--primary)] transition-colors">{event.title}</h4>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-[var(--text-secondary)] font-medium">

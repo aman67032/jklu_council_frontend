@@ -6,25 +6,26 @@ import Navbar from '@/components/Navbar';
 import api from '@/lib/api';
 import { format } from 'date-fns';
 import Image from 'next/image';
-import { Calendar, MapPin, Users, Mail, User, Info, Image as ImageIcon } from 'lucide-react';
+import { Calendar, MapPin, Users, Mail, User, Info, Image as ImageIcon, ChevronLeft } from 'lucide-react';
 import { getClubLogo } from '@/lib/club-assets';
+import Link from 'next/link';
+import ClubEventCard from '@/components/ClubEventCard';
 
 // Helper to generate a consistent theme color based on string
 const getThemeColor = (str: string) => {
-  const hash = str.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
-  const hue = Math.abs(hash % 360);
-  return {
-    primary: `hsl(${hue}, 70%, 50%)`,
-    secondary: `hsl(${hue}, 70%, 90%)`,
-    gradient: `linear-gradient(135deg, hsl(${hue}, 70%, 50%), hsl(${(hue + 40) % 360}, 70%, 60%))`
-  };
+  const n = str.toLowerCase();
+  if (n.includes('tech') || n.includes('code') || n.includes('cyber')) return { primary: '#3B82F6', secondary: 'rgba(59, 130, 246, 0.1)', gradient: 'from-blue-600 to-indigo-600' };
+  if (n.includes('art') || n.includes('design') || n.includes('drama')) return { primary: '#F97316', secondary: 'rgba(249, 115, 22, 0.1)', gradient: 'from-orange-500 to-red-600' };
+  if (n.includes('music') || n.includes('dance')) return { primary: '#F59E0B', secondary: 'rgba(245, 158, 11, 0.1)', gradient: 'from-amber-500 to-orange-600' };
+  if (n.includes('sport') || n.includes('game')) return { primary: '#EF4444', secondary: 'rgba(239, 68, 68, 0.1)', gradient: 'from-red-600 to-orange-700' };
+  return { primary: '#3B82F6', secondary: 'rgba(59, 130, 246, 0.1)', gradient: 'from-blue-500 to-cyan-500' };
 };
 
 export default function ClubDetailPage() {
   const params = useParams();
   const [club, setClub] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState<any>({});
+  const [theme, setTheme] = useState<any>({ primary: '#3B82F6', gradient: 'from-blue-600 to-indigo-600' });
 
   useEffect(() => {
     fetchClub();
@@ -46,131 +47,129 @@ export default function ClubDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--background)]">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-current text-[var(--primary)]"></div>
-        </div>
+      <div className="min-h-screen bg-[#050510] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gray-800 border-t-blue-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!club) {
     return (
-      <div className="min-h-screen bg-[var(--background)]">
+      <div className="min-h-screen bg-[#050510] text-white">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-12 text-center text-[var(--text-secondary)]">
-          Club not found
+        <div className="max-w-7xl mx-auto px-4 py-24 text-center">
+          <h2 className="text-2xl font-bold mb-4">Club not found</h2>
+          <Link href="/clubs" className="text-blue-500 hover:text-blue-400">Back to Clubs</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pb-20">
+    <div className="min-h-screen bg-[#050510] text-gray-100 pb-20 overflow-x-hidden selection:bg-orange-500/30 selection:text-white">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-600/10 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5"></div>
+      </div>
+
       <Navbar />
 
       {/* Dynamic Header */}
-      <div className="relative text-white py-24 px-4 overflow-hidden"
-        style={{ background: theme.gradient }}>
-        {/* SVG Pattern Overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
+      <div className={`relative pt-32 pb-20 px-4 overflow-hidden`}>
+        <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient} opacity-10`}></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#050510]"></div>
 
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
-          <div className="w-32 h-32 md:w-40 md:h-40 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center border-4 border-white/30 shadow-2xl relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8 animate-fade-in-up">
+          <Link href="/clubs" className="absolute top-[-60px] left-0 text-gray-500 hover:text-white flex items-center transition-colors">
+            <ChevronLeft className="w-5 h-5 mr-1" /> Back to Clubs
+          </Link>
+
+          <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-900/50 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl relative overflow-hidden group">
             {getClubLogo(club.slug) ? (
-              <Image
-                src={getClubLogo(club.slug)!}
-                alt={`${club.name} logo`}
-                fill
-                className="object-cover"
-              />
+              <div className="relative w-full h-full p-4 group-hover:scale-110 transition-transform duration-500">
+                <Image
+                  src={getClubLogo(club.slug)!}
+                  alt={`${club.name} logo`}
+                  fill
+                  className="object-contain drop-shadow-lg"
+                />
+              </div>
             ) : (
-              <Users className="w-16 h-16 text-white" />
+              <Users className="w-16 h-16 text-white/50" />
             )}
           </div>
+
           <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-6xl font-black mb-2 tracking-tight">{club.name}</h1>
+            <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight text-white">
+              {club.name}
+            </h1>
             {club.council_name && (
-              <span className="inline-block px-4 py-1 bg-white/20 backdrop-blur rounded-full text-sm font-medium border border-white/20">
-                Part of {club.council_name}
-              </span>
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                <span className="text-sm font-medium text-gray-300">Part of <span className="text-white font-bold">{club.council_name}</span></span>
+              </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-[var(--card-bg)] rounded-2xl p-8 shadow-lg border border-[var(--card-border)]">
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center">
-                <Info className="w-6 h-6 mr-2" style={{ color: theme.primary }} />
+            <div className="bg-gray-900/40 backdrop-blur-sm rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-colors">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                <Info className="w-6 h-6 mr-3" style={{ color: theme.primary }} />
                 About Us
               </h2>
-              <p className="text-[var(--text-secondary)] text-lg leading-relaxed whitespace-pre-wrap">
+              <p className="text-gray-400 text-lg leading-relaxed whitespace-pre-wrap">
                 {club.description || "No description provided yet."}
               </p>
             </div>
 
-            {/* Image Placeholders */}
-            <div className="bg-[var(--card-bg)] rounded-2xl p-8 shadow-lg border border-[var(--card-border)]">
-              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center">
-                <ImageIcon className="w-6 h-6 mr-2" style={{ color: theme.primary }} />
-                Gallery
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700">
-                  <span className="text-gray-400 font-medium">Club Image 1 Placeholder</span>
-                </div>
-                <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700">
-                  <span className="text-gray-400 font-medium">Club Image 2 Placeholder</span>
-                </div>
-              </div>
-            </div>
-
             {/* Upcoming Events */}
-            {club.upcoming_events && club.upcoming_events.length > 0 && (
-              <div className="bg-[var(--card-bg)] rounded-2xl p-8 shadow-lg border border-[var(--card-border)]">
-                <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center">
-                  <Calendar className="w-6 h-6 mr-2" style={{ color: theme.primary }} />
-                  Upcoming Events
-                </h2>
-                <div className="space-y-4">
-                  {club.upcoming_events.map((event: any) => (
-                    <div key={event.id} className="flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-xl bg-[var(--background)] border border-[var(--card-border)] hover:border-[var(--primary)] transition-colors">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-[var(--text-primary)]">{event.title}</h3>
-                        <div className="text-sm text-[var(--text-secondary)] mt-1 flex flex-wrap gap-4">
-                          <span className="flex items-center"><Calendar className="w-4 h-4 mr-1" /> {format(new Date(event.start_date), 'PPP p')}</span>
-                          {event.venue && <span className="flex items-center"><MapPin className="w-4 h-4 mr-1" /> {event.venue}</span>}
-                        </div>
-                      </div>
-                      <div className="px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap" style={{ background: theme.secondary, color: theme.primary }}>
-                        {event.status}
-                      </div>
-                    </div>
+            <div className="bg-gray-900/40 backdrop-blur-sm rounded-3xl p-8 border border-white/5 hover:border-white/10 transition-colors">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                <Calendar className="w-6 h-6 mr-3" style={{ color: theme.primary }} />
+                Upcoming Events
+              </h2>
+
+              {club.events && club.events.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {club.events.map((event: any) => (
+                    <ClubEventCard
+                      key={event.id}
+                      id={event.id}
+                      title={event.title}
+                      date={event.start_date}
+                      venue={event.venue}
+                      imageUrl={event.image_url}
+                      status={event.status}
+                      desc={event.description}
+                      color={`text-${theme.primary}`}
+                      bg={`bg-${theme.primary}/10`}
+                      border={`group-hover:border-${theme.primary}/50`}
+                      is_enrolled={event.is_enrolled}
+                    />
                   ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-12 bg-black/20 rounded-2xl border border-white/5 border-dashed">
+                  <Calendar className="w-12 h-12 text-gray-700 mx-auto mb-4" />
+                  <p className="text-gray-500 font-medium">No upcoming events scheduled</p>
+                </div>
+              )}
+            </div>
+
+            {/* Gallery Placeholder Moved to bottom or removed if not needed, keeping layout simple as per 'About Us' and 'Events' focus */}
           </div>
 
           {/* Sidebar - Leadership */}
           <div className="lg:col-span-1">
-            <div className="bg-[var(--card-bg)] rounded-2xl p-6 shadow-lg border border-[var(--card-border)] sticky top-24">
-              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 border-b border-[var(--card-border)] pb-4">
+            <div className="bg-gray-900/40 backdrop-blur-sm rounded-3xl p-8 border border-white/5 sticky top-24">
+              <h2 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">
                 Leadership Team
               </h2>
 
@@ -182,14 +181,14 @@ export default function ClubDetailPage() {
                   { title: 'General Secretary', person: club.general_secretary_name, email: club.general_secretary_email },
                 ].map((role, idx) => role.person && (
                   <div key={idx} className="flex items-start gap-4 group">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0" style={{ background: theme.primary }}>
-                      <User className="w-5 h-5" />
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0 bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 shadow-lg">
+                      <User className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-0.5">{role.title}</p>
-                      <p className="font-bold text-[var(--text-primary)]">{role.person.name}</p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">{role.title}</p>
+                      <p className="font-bold text-gray-200 group-hover:text-white transition-colors">{role.person}</p>
                       {role.email && (
-                        <a href={`mailto:${role.email}`} className="text-sm hover:underline mt-0.5 block" style={{ color: theme.primary }}>
+                        <a href={`mailto:${role.email}`} className="text-xs text-blue-500 hover:text-blue-400 mt-0.5 block transition-colors">
                           {role.email}
                         </a>
                       )}
@@ -198,7 +197,7 @@ export default function ClubDetailPage() {
                 ))}
 
                 {(!club.chair_name && !club.secretary_name) && (
-                  <p className="text-[var(--text-secondary)] italic">Leadership information updating...</p>
+                  <p className="text-gray-500 italic text-center py-4">Leadership information updating...</p>
                 )}
               </div>
             </div>

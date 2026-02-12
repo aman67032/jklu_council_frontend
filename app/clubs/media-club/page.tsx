@@ -7,6 +7,8 @@ import { Mic, Video, Newspaper, Radio, Tv, Users, Calendar, MapPin, Send, Instag
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function MediaClubPage() {
     const { user } = useAuth();
@@ -14,11 +16,27 @@ export default function MediaClubPage() {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     useEffect(() => {
         setMounted(true);
         setMode('dark');
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/media-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -138,28 +156,36 @@ export default function MediaClubPage() {
             <section className="relative z-10 py-24 max-w-6xl mx-auto px-4">
                 <SectionHeader title="Broadcast Schedule" subtitle="Upcoming Productions" center />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-                    <ProgramCard
-                        title="Media House Visit"
-                        category="Field Trip"
-                        status="Scheduling"
-                        desc="Exclusive behind-the-scenes tour of a major news network."
-                        color="red"
-                    />
-                    <ProgramCard
-                        title="Sociama Magazine"
-                        category="Publication"
-                        status="In Production"
-                        desc="The first volume of our student-led lifestyle and creative magazine."
-                        color="blue"
-                    />
-                    <ProgramCard
-                        title="Campus Coverage"
-                        category="Reporting"
-                        status="Ongoing"
-                        desc="Documenting events, meetings, and student life across campus."
-                        color="purple"
-                    />
+                <div className="mt-12">
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-white"
+                                    bg="bg-slate-900"
+                                    border="group-hover:border-red-600/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 bg-slate-900 rounded-lg border border-slate-800 border-dashed">
+                            <Cast className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                            <p className="text-slate-500 font-medium">No broadcasts scheduled in the lineup.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

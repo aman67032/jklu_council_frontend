@@ -159,23 +159,38 @@ export default function EventsPage() {
                                         }`}
                                 >
                                     {/* Card Header Gradient */}
-                                    <div className={`h-32 w-full relative overflow-hidden ${theme === 'dark'
-                                        ? 'bg-gradient-to-br from-gray-800 to-gray-900 group-hover:from-[var(--primary)]/20 group-hover:to-blue-900/20'
-                                        : 'bg-gradient-to-br from-gray-100 to-blue-50 group-hover:from-orange-50 group-hover:to-blue-50'
+                                    <div className={`h-48 w-full relative overflow-hidden ${theme === 'dark'
+                                        ? 'bg-gradient-to-br from-gray-800 to-gray-900'
+                                        : 'bg-gradient-to-br from-gray-100 to-blue-50'
                                         } transition-colors duration-500`}>
-                                        <div className="absolute top-4 left-4 flex gap-2">
+
+                                        {event.image_url && (
+                                            <>
+                                                <img
+                                                    src={event.image_url}
+                                                    alt={event.title}
+                                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).style.display = 'none';
+                                                    }}
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                                            </>
+                                        )}
+
+                                        <div className="absolute top-4 left-4 flex gap-2 z-10">
                                             {event.council_name && (
-                                                <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-black/20 text-white backdrop-blur-md rounded-full border border-white/10">
+                                                <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-black/40 text-white backdrop-blur-md rounded-full border border-white/10">
                                                     {event.council_name}
                                                 </span>
                                             )}
                                         </div>
                                         <div className="absolute bottom-4 left-4 right-4 relative z-10">
-                                            <div className="flex items-center gap-2 text-xs font-medium opacity-80 mb-1">
+                                            <div className="flex items-center gap-2 text-xs font-medium text-white/90 mb-1">
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 {format(new Date(event.start_date), 'MMM d, yyyy')}
                                             </div>
-                                            <h3 className={`text-xl font-bold line-clamp-2 leading-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                            <h3 className="text-xl font-bold line-clamp-2 leading-tight text-white drop-shadow-md">
                                                 {event.title}
                                             </h3>
                                         </div>

@@ -9,6 +9,10 @@ import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { div } from 'framer-motion/client';
 
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
+import Image from 'next/image';
+
 export default function AstronomyClubPage() {
     const { user } = useAuth();
     const { setMode } = useTheme();
@@ -16,6 +20,8 @@ export default function AstronomyClubPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
     const { scrollY } = useScroll();
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     // Parallax stars
     const yStars = useTransform(scrollY, [0, 1000], [0, 300]);
@@ -24,7 +30,21 @@ export default function AstronomyClubPage() {
     useEffect(() => {
         setMounted(true);
         setMode('dark');
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/astronomy-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -39,7 +59,15 @@ export default function AstronomyClubPage() {
     return (
         <div className="min-h-screen bg-[#050B14] text-slate-100 font-sans selection:bg-purple-500 selection:text-white overflow-x-hidden relative">
             {/* Starfield Background */}
-            <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-[#050B14] to-[#050B14]"></div>
+            {/* Starfield Background with Improved Galaxy Effect */}
+            <div className="fixed inset-0 z-0 bg-[#020617]">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/40 via-[#020617] to-[#020617]"></div>
+
+                {/* Nebula Effects mimicking the reference image */}
+                <div className="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] bg-pink-600/20 rounded-full blur-[150px] mix-blend-screen animate-pulse-slow"></div>
+                <div className="absolute top-[20%] right-[-20%] w-[80vw] h-[80vw] bg-blue-600/20 rounded-full blur-[150px] mix-blend-screen animate-pulse-slow delay-1000"></div>
+                <div className="absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] bg-purple-600/20 rounded-full blur-[150px] mix-blend-screen animate-pulse-slow delay-2000"></div>
+            </div>
 
             {/* Animated Stars (CSS based for performance) */}
             <div className="fixed inset-0 z-0 pointer-events-none">
@@ -71,6 +99,18 @@ export default function AstronomyClubPage() {
             {/* --- HERO SECTION: THE COSMOS --- */}
             <div className="relative z-10 min-h-screen flex flex-col items-center justify-center pt-24 px-4 text-center overflow-hidden">
 
+                {/* Hero Background Image */}
+                <div className="absolute inset-0 z-[-1] opacity-60">
+                    <Image
+                        src="/Clubs/astro_club/bg.png"
+                        alt="Cosmic Background"
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#050B14]/80 via-transparent to-[#050B14] mix-blend-multiply"></div>
+                </div>
+
                 {/* Floating Planet Element */}
                 <motion.div
                     style={{ y: yPlanets }}
@@ -83,10 +123,17 @@ export default function AstronomyClubPage() {
                     transition={{ duration: 1.2, ease: "easeOut" }}
                     className="mb-8 relative"
                 >
-                    <div className="relative w-40 h-40 mx-auto flex items-center justify-center">
+                    <div className="relative w-80 h-80 mx-auto flex items-center justify-center">
                         <div className="absolute inset-0 border border-purple-500/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
                         <div className="absolute inset-4 border border-blue-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
-                        <Telescope className="w-20 h-20 text-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
+                        <div className="relative w-100 h-100">
+                            <Image
+                                src="/Clubs/astro_club/gallery/logo.png"
+                                alt="Nakshatra Logo"
+                                fill
+                                className="object-contain drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -136,7 +183,7 @@ export default function AstronomyClubPage() {
                     <div>
                         <SectionHeader title="Our Mission" subtitle="The Observatory" />
                         <p className="text-lg text-slate-300 leading-relaxed mb-8">
-                            Club Nakshatra is dedicated to exploring the wonders of the universe and promoting the study of astronomy. Whether you are an amateur astronomer, a professional, or just a beginner intrigued by the beauty of the cosmos, we help you learn astronomy, build practical skills, and connect with others who love space.
+                            Club Nakshatra is dedicated to exploring the wonders of the universe and promoting the study of astronomy among the student community through state-of-the-art telescopes, binoculars, and other scientific instruments. Whether you are an amateur astronomer, a professional, or just a beginner who is intrigued by the beauty of the cosmos, the Astronomy Club is for you. We help students learn astronomy, build practical skills like telescope handling or astrophotography, and connect with others who love space.
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -168,38 +215,66 @@ export default function AstronomyClubPage() {
             <section className="relative z-10 py-24 max-w-6xl mx-auto px-4">
                 <SectionHeader title="Upcoming Celestial Events" subtitle="Star Log" center />
 
-                <div className="relative border-l-2 border-purple-500/20 ml-4 md:ml-0 space-y-12 mt-12">
-                    <EventTimelineItem
-                        date="25-28 JAN"
-                        title="Mars Watch & Red Planet Discussion"
-                        desc="Detailed observation of Mars and discussion on its surface features."
-                        icon={<Globe />}
-                    />
-                    <EventTimelineItem
-                        date="17-20 FEB"
-                        title="Moon Observation Night"
-                        desc="Exploring lunar craters and seas with telescopes."
-                        icon={<Moon />}
-                        highlight
-                    />
-                    <EventTimelineItem
-                        date="11-14 MAR"
-                        title="Full Moon Observation & Sky Stories"
-                        desc="A night of myths, legends, and full moon gazing."
-                        icon={<Star />}
-                    />
-                    <EventTimelineItem
-                        date="24-27 MAR"
-                        title="Astro-Photography Collaboration"
-                        desc="Joint session with The Shade (Photography Club) to capture the night sky."
-                        icon={<Telescope />}
-                    />
-                    <EventTimelineItem
-                        date="21-23 APR"
-                        title="Lyrid Meteor Shower Watch"
-                        desc="Witnessing one of the oldest known meteor showers."
-                        icon={<Rocket />}
-                    />
+                <div className="mt-12">
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-purple-400"
+                                    bg="bg-purple-500/10"
+                                    border="group-hover:border-purple-500/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 bg-white/5 rounded-2xl border border-dotted border-white/10">
+                            <Star className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                            <p className="text-slate-400 font-medium">No celestial events currently scheduled.</p>
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* --- SECTION 2.5: COSMIC GALLERY --- */}
+            <section className="relative z-10 py-12 max-w-7xl mx-auto px-4">
+                <SectionHeader title="Through The Reaches" subtitle="Gallery" center />
+                <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 mt-8">
+                    {[
+                        { src: "/Clubs/astro_club/gallery/gallery/image12.png", alt: "Gallery 1" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image13.png", alt: "Gallery 2" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image14.png", alt: "Gallery 3" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image9.png", alt: "Gallery 4" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image7.jpg", alt: "Gallery 5" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image15.jpg", alt: "Gallery 6" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image1.jpg", alt: "Gallery 7" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image3.jpg", alt: "Gallery 8" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image4.jpg", alt: "Gallery 9" },
+                        { src: "/Clubs/astro_club/gallery/gallery/image16.png", alt: "Gallery 10" },
+                    ].map((img, index) => (
+                        <div key={index} className="relative rounded-2xl overflow-hidden group border border-purple-500/20 break-inside-avoid">
+                            <Image
+                                src={img.src}
+                                alt={img.alt}
+                                width={500}
+                                height={300}
+                                className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
+                            <div className="absolute inset-0 bg-purple-900/0 group-hover:bg-purple-900/20 transition-colors"></div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -214,22 +289,50 @@ export default function AstronomyClubPage() {
                             name="Aryan Gupta"
                             role="Chairperson"
                             rank="Commander"
-                            image="/Photoes ID CARD Student Council/Aryan Gupta (chair_nakshtra).jpg"
+                            image="/Clubs/astro_club/gallery/chair.jpg"
                         />
                         <CommanderCard
                             name="Vidhaan P Shah"
                             role="Co-Chairperson"
                             rank="Lt. Commander"
-                            image="/Photoes ID CARD Student Council/Vidhaan Shah(co-chair nakshtra).jpg"
+                            image="/Clubs/astro_club/gallery/co-chair.jpg"
                         />
                     </div>
 
                     {/* Coordinators */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <OfficerCard name="Khushi Soni" role="Super Coordinator" />
-                        <OfficerCard name="Chirag Negi" role="Social Media" />
-                        <OfficerCard name="Ghyan Chechani" role="Social Media" />
-                        <OfficerCard name="Rishi Jangid" role="Event Manager" />
+                        <div className="col-span-2 md:col-span-1">
+                            <CommanderCard
+                                name="Khushi Soni"
+                                role="Super Coordinator"
+                                rank="Officer"
+                                image="/Clubs/astro_club/gallery/Super coordinator.jpg"
+                            />
+                        </div>
+                        <div className="col-span-2 md:col-span-1">
+                            <CommanderCard
+                                name="Chirag Negi"
+                                role="Social Media"
+                                rank="Officer"
+                                image="/Clubs/astro_club/gallery/Social media coordinator.jpg"
+                            />
+                        </div>
+                        <div className="col-span-2 md:col-span-1">
+                            <CommanderCard
+                                name="Ghyan Chechani"
+                                role="Social Media"
+                                rank="Officer"
+                                image="/Clubs/astro_club/gallery/Social media coordinator(2).jpg"
+                            />
+                        </div>
+                        <div className="col-span-2 md:col-span-1">
+                            <CommanderCard
+                                name="Rishi Jangid"
+                                role="Event Manager"
+                                rank="Officer"
+                                image="/Clubs/astro_club/gallery/Event manager.jpg"
+                            />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -291,21 +394,25 @@ function EventTimelineItem({ date, title, desc, icon, highlight }: any) {
 
 function CommanderCard({ name, role, rank, image }: any) {
     return (
-        <div className="flex flex-col items-center p-8 bg-[#0a1120] border border-purple-500/20 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 w-64">
+        <div className="flex flex-col items-center p-8 bg-[#0a1120] border border-purple-500/20 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 w-80">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-            <div className="w-24 h-24 rounded-full bg-[#050B14] border-2 border-purple-500/30 flex items-center justify-center mb-4 relative z-10 group-hover:border-purple-400 transition-colors overflow-hidden">
-                {image ? (
-                    <img src={image} alt={name} className="w-full h-full object-cover" />
-                ) : (
-                    <Users className="w-10 h-10 text-slate-500 group-hover:text-white transition-colors" />
-                )}
+            {/* Hexagon Shape for "Not Circle Not Cube" */}
+            <div className="w-48 h-48 mb-6 relative z-10 group-hover:scale-105 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-600 clip-path-polygon-[25%_0%,_75%_0%,_100%_50%,_75%_100%,_25%_100%,_0%_50%]"></div>
+                <div className="absolute inset-[2px] bg-[#0a1120] clip-path-polygon-[25%_0%,_75%_0%,_100%_50%,_75%_100%,_25%_100%,_0%_50%] flex items-center justify-center overflow-hidden">
+                    {image ? (
+                        <img src={image} alt={name} className="w-full h-full object-cover" />
+                    ) : (
+                        <Users className="w-16 h-16 text-slate-500 group-hover:text-white transition-colors" />
+                    )}
+                </div>
             </div>
 
             <div className="relative z-10 text-center">
-                <div className="text-purple-500 text-[10px] font-bold uppercase tracking-widest mb-1">{rank}</div>
-                <h3 className="text-xl font-bold text-white mb-1">{name}</h3>
-                <p className="text-slate-500 text-xs uppercase">{role}</p>
+                <div className="text-purple-500 text-xs font-bold uppercase tracking-widest mb-2">{rank}</div>
+                <h3 className="text-2xl font-bold text-white mb-1">{name}</h3>
+                <p className="text-slate-400 text-sm uppercase">{role}</p>
             </div>
         </div>
     );

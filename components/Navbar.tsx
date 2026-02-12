@@ -86,6 +86,11 @@ export default function Navbar() {
                   <NavLink href="/admin" icon={<BarChart3 className="w-4 h-4" />}>
                     Admin
                   </NavLink>
+                  {user.role === 'super_admin' && (
+                    <NavLink href="/admin/users" icon={<Users className="w-4 h-4" />}>
+                      Manage Users
+                    </NavLink>
+                  )}
                   <NavLink href="/admin/events" icon={<Calendar className="w-4 h-4" />}>
                     Manage Events
                   </NavLink>

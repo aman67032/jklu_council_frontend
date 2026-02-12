@@ -35,11 +35,11 @@ export default function ClubsPage() {
 
     const getClubTheme = (name: string) => {
         const n = name.toLowerCase();
-        if (n.includes('tech') || n.includes('code') || n.includes('cyber')) return { color: 'cyan', icon: <Cpu />, gradient: 'from-cyan-500 to-blue-600', bg: 'tech-pattern' };
-        if (n.includes('art') || n.includes('design') || n.includes('drama')) return { color: 'pink', icon: <Palette />, gradient: 'from-pink-500 to-rose-600', bg: 'art-pattern' };
-        if (n.includes('music') || n.includes('dance')) return { color: 'purple', icon: <Music />, gradient: 'from-violet-500 to-purple-600', bg: 'music-pattern' };
-        if (n.includes('sport') || n.includes('game')) return { color: 'orange', icon: <Trophy />, gradient: 'from-orange-500 to-red-600', bg: 'sport-pattern' };
-        return { color: 'emerald', icon: <Users />, gradient: 'from-emerald-500 to-teal-600', bg: 'default-pattern' };
+        if (n.includes('tech') || n.includes('code') || n.includes('cyber')) return { color: 'blue', icon: <Cpu />, gradient: 'from-blue-600 to-indigo-600', bg: 'tech-pattern' };
+        if (n.includes('art') || n.includes('design') || n.includes('drama')) return { color: 'orange', icon: <Palette />, gradient: 'from-orange-500 to-red-600', bg: 'art-pattern' };
+        if (n.includes('music') || n.includes('dance')) return { color: 'amber', icon: <Music />, gradient: 'from-amber-500 to-orange-600', bg: 'music-pattern' };
+        if (n.includes('sport') || n.includes('game')) return { color: 'red', icon: <Trophy />, gradient: 'from-red-600 to-orange-700', bg: 'sport-pattern' };
+        return { color: 'blue', icon: <Users />, gradient: 'from-blue-500 to-cyan-500', bg: 'default-pattern' };
     };
 
     const displayedSlugs = new Set();
@@ -68,35 +68,37 @@ export default function ClubsPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500 selection:text-black overflow-x-hidden">
-            <div className="fixed inset-0 z-0 bg-[url('/noise.png')] opacity-5 pointer-events-none"></div>
-            <div className="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-blue-900/20 via-slate-900/0 to-transparent z-0 pointer-events-none"></div>
+        <div className="min-h-screen bg-[#050510] text-gray-100 selection:bg-orange-500/30 selection:text-white overflow-x-hidden">
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-orange-600/10 rounded-full blur-[100px]" />
+            </div>
 
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
                 {/* Hero Header */}
                 <div className="text-center mb-20 animate-fade-in-up">
-                    <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-slate-700 bg-slate-900/50 backdrop-blur-md text-sm font-medium text-slate-300">
+                    <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-gray-800 bg-gray-900/50 backdrop-blur-md text-sm font-medium text-gray-400">
                         Explore Communities
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-500">
-                        Student <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Clubs</span>
+                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight text-white">
+                        Student <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-orange-500">Clubs</span>
                     </h1>
-                    <p className="max-w-2xl mx-auto text-lg text-slate-400 leading-relaxed">
+                    <p className="max-w-2xl mx-auto text-lg text-gray-400 leading-relaxed">
                         Join diverse communities, discover your passions, and attend exclusive events.
                         Find your tribe at JKLU.
                     </p>
 
                     {/* Search Bar */}
                     <div className="mt-10 max-w-xl mx-auto relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                        <div className="relative flex items-center bg-slate-900/80 border border-slate-700/50 rounded-2xl p-2 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:border-slate-600">
-                            <Search className="ml-4 w-5 h-5 text-slate-400" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-orange-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                        <div className="relative flex items-center bg-gray-900/80 border border-gray-800 rounded-2xl p-2 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:border-gray-700 focus-within:border-blue-500/50">
+                            <Search className="ml-4 w-5 h-5 text-gray-500 group-focus-within:text-orange-500 transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Search for clubs..."
-                                className="w-full bg-transparent border-none focus:ring-0 text-white placeholder-slate-500 px-4 py-3 text-lg"
+                                className="w-full bg-transparent border-none focus:ring-0 text-white placeholder-gray-600 px-4 py-3 text-lg"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -107,7 +109,7 @@ export default function ClubsPage() {
                 {/* Loading State */}
                 {loading ? (
                     <div className="flex justify-center py-20">
-                        <div className="w-12 h-12 border-4 border-slate-800 border-t-cyan-500 rounded-full animate-spin"></div>
+                        <div className="w-12 h-12 border-4 border-gray-800 border-t-orange-500 rounded-full animate-spin"></div>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,7 +119,7 @@ export default function ClubsPage() {
                                 <Link
                                     href={`/clubs/${displayClub.slug}`}
                                     key={displayClub.slug + index}
-                                    className="group relative h-[420px] bg-slate-900/40 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-600 transition-all duration-500 hover:shadow-[0_0_30px_rgba(2,6,23,0.8)] flex flex-col"
+                                    className="group relative h-[420px] bg-gray-900/40 border border-white/5 rounded-3xl overflow-hidden hover:border-orange-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-500/10 flex flex-col"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
                                     {/* SVG Aesthetic Background */}
@@ -151,7 +153,7 @@ export default function ClubsPage() {
                                         )}
 
                                         {displayClub.council_name && (
-                                            <div className="absolute top-8 right-8 px-3 py-1 rounded-full bg-slate-950/50 border border-slate-700/50 text-xs font-bold tracking-wider text-slate-400 uppercase backdrop-blur-md">
+                                            <div className="absolute top-8 right-8 px-3 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-bold tracking-wider text-gray-400 uppercase backdrop-blur-md">
                                                 {displayClub.council_name}
                                             </div>
                                         )}
@@ -159,15 +161,15 @@ export default function ClubsPage() {
 
                                     {/* Content Section */}
                                     <div className="relative p-8 flex-1 flex flex-col">
-                                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
+                                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
                                             {displayClub.name}
                                         </h3>
-                                        <p className="text-slate-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
+                                        <p className="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
                                             {displayClub.description || 'A community for like-minded individuals to innovate, create, and grow together.'}
                                         </p>
 
                                         <div className="pt-6 border-t border-white/5 flex items-center justify-between mt-auto">
-                                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest group-hover:text-white transition-colors">
+                                            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest group-hover:text-white transition-colors">
                                                 View Club
                                             </span>
                                             <div className={`w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white bg-white/5 group-hover:bg-gradient-to-r ${theme.gradient} group-hover:border-transparent transition-all duration-300 transform group-hover:rotate-[-45deg]`}>
@@ -187,11 +189,11 @@ export default function ClubsPage() {
                 {/* Empty State */}
                 {!loading && filteredClubs.length === 0 && (
                     <div className="text-center py-20">
-                        <div className="inline-flex justify-center items-center w-20 h-20 rounded-full bg-slate-900 border border-slate-800 mb-6">
-                            <Search className="w-8 h-8 text-slate-600" />
+                        <div className="inline-flex justify-center items-center w-20 h-20 rounded-full bg-gray-900 border border-gray-800 mb-6">
+                            <Search className="w-8 h-8 text-gray-600" />
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2">No clubs found</h3>
-                        <p className="text-slate-500">Try adjusting your search terms</p>
+                        <p className="text-gray-500">Try adjusting your search terms</p>
                     </div>
                 )}
             </div>

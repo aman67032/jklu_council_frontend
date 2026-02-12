@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { Calendar, MapPin, Award, Users, Info, Image as ImageIcon, ChevronRight, Gavel, BookOpen, Heart, Activity, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import ClubEventCard from '@/components/ClubEventCard';
 
 // Roster Data
 const councilRoster: Record<string, { genSec: any; sec: any }> = {
@@ -238,49 +239,43 @@ export default function CouncilDetailPage() {
                 </div>
               </div>
             )}
+
+            {/* Upcoming Events Section */}
+            <div className="bg-slate-900/40 backdrop-blur-md rounded-3xl p-8 border border-white/5">
+              <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                <Calendar className="text-amber-500" /> Council Events
+              </h2>
+              {council.events && council.events.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {council.events.map((event: any) => (
+                    <ClubEventCard
+                      key={event.id}
+                      id={event.id}
+                      title={event.title}
+                      date={event.start_date}
+                      venue={event.venue}
+                      imageUrl={event.image_url}
+                      status={event.status}
+                      desc={event.description}
+                      color="text-amber-500"
+                      bg="bg-amber-500/10"
+                      border="group-hover:border-amber-500/50"
+                      is_enrolled={event.is_enrolled}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-black/20 rounded-2xl border border-white/5 border-dashed">
+                  <Calendar className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                  <p className="text-slate-500 font-medium">No upcoming council events.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-8">
-            {/* Events Widget */}
-            <div className="bg-slate-900/40 backdrop-blur-md rounded-3xl p-6 border border-white/5 sticky top-24">
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Calendar className="text-amber-500 w-5 h-5" /> Council Events
-                </h2>
-                <span className="text-xs font-bold bg-amber-500/10 text-amber-500 px-2 py-1 rounded">2026</span>
-              </div>
-
-              {council.upcoming_events && council.upcoming_events.length > 0 ? (
-                <div className="space-y-4">
-                  {council.upcoming_events.map((event: any) => (
-                    <Link
-                      key={event.id}
-                      href={`/events/${event.id}`}
-                      className="block p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-transparent hover:border-white/10"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="text-xs font-bold text-amber-500 uppercase tracking-wide">
-                          {format(new Date(event.start_date), 'MMM d')}
-                        </div>
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                      </div>
-                      <h3 className="font-bold text-white mb-1 line-clamp-1">{event.title}</h3>
-                      <p className="text-xs text-slate-400 flex items-center gap-1">
-                        <MapPin className="w-3 h-3" /> Campus Center
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-600">
-                    <Calendar className="w-6 h-6" />
-                  </div>
-                  <p className="text-slate-500 text-sm">No upcoming events.</p>
-                </div>
-              )}
-            </div>
+            {/* Additional sidebar content can go here if needed, currently empty/reserved */}
           </div>
         </div>
       </div>

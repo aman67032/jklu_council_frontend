@@ -7,6 +7,8 @@ import { Palette, PenTool, Layout, Layers, Box, Users, Calendar, ArrowRight, Ins
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function DesignClubPage() {
     const { user } = useAuth();
@@ -14,11 +16,27 @@ export default function DesignClubPage() {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     useEffect(() => {
         setMounted(true);
         setMode('light'); // Force light mode for whitespace aesthetic
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/design-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -151,20 +169,35 @@ export default function DesignClubPage() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/20 border border-white/20">
-                        <ProjectCard
-                            title="Cafeteria Revamp"
-                            category="Intervention"
-                            desc="Collaborated with The House of Arts to redesign the cafeteria space through artistic interventions, fostering campus beautification."
-                            status="Completed"
-                        />
-                        <ProjectCard
-                            title="Design Challenges"
-                            category="Competition"
-                            desc="Regular challenges to push creative boundaries and solve problems through visual thinking."
-                            status="Ongoing"
-                        />
-                    </div>
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-white/20 border border-white/20 p-8">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-white"
+                                    bg="bg-white/10"
+                                    border="group-hover:border-white/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-20 border border-white/20 border-dashed">
+                            <Box className="w-16 h-16 text-white/50 mx-auto mb-4" />
+                            <p className="text-white/60 font-medium">No projects currently in the portfolio.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

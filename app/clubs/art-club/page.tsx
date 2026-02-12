@@ -9,6 +9,8 @@ import ArtClubBg from '@/components/ArtClubBg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function ArtClubPage() {
     const { user } = useAuth();
@@ -16,9 +18,27 @@ export default function ArtClubPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
 
+
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
+
     useEffect(() => {
         setMounted(true);
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/art-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     if (!mounted) return null;
 
@@ -214,23 +234,35 @@ export default function ArtClubPage() {
                         <h3 className="text-2xl font-bold mb-8 flex items-center gap-3 text-slate-700">
                             <Calendar className="text-pink-500" /> Upcoming Masterpieces
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                { title: "Vision Board Activity", type: "Workshop" },
-                                { title: "Albert Hall Visit", type: "Field Trip" },
-                                { title: "Art Therapy", type: "Wellness" },
-                                { title: "Live Music & Sketching", type: "Event" },
-                                { title: "Intro to Figma", type: "Digital" }
-                            ].map((evt, i) => (
-                                <div key={i} className="group p-6 bg-white rounded-3xl border border-slate-200 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-bold uppercase tracking-wider">{evt.type}</div>
-                                    </div>
-                                    <h4 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-purple-600 transition-colors">{evt.title}</h4>
-                                    <p className="text-slate-500 text-sm">Coming soon to ignite your imagination.</p>
-                                </div>
-                            ))}
-                        </div>
+                        {loadingEvents ? (
+                            <div className="flex justify-center py-20">
+                                <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        ) : events.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {events.map((event) => (
+                                    <ClubEventCard
+                                        key={event.id}
+                                        id={event.id}
+                                        title={event.title}
+                                        date={event.start_date}
+                                        venue={event.venue}
+                                        imageUrl={event.image_url}
+                                        status={event.status}
+                                        desc={event.description}
+                                        color="text-pink-500"
+                                        bg="bg-pink-500/10"
+                                        border="group-hover:border-pink-500/50"
+                                        is_enrolled={event.is_enrolled}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-white rounded-3xl border border-dotted border-slate-300">
+                                <Palette className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                                <p className="text-slate-500 font-medium">No masterpieces currently scheduled.</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Past */}

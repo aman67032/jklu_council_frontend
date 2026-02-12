@@ -7,6 +7,8 @@ import { TrendingUp, Briefcase, Users, PieChart, DollarSign, Target, Calendar, A
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function BusinessClubPage() {
     const { user } = useAuth();
@@ -15,13 +17,29 @@ export default function BusinessClubPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
     const { scrollY } = useScroll();
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     const yBackground = useTransform(scrollY, [0, 1000], [0, 150]);
 
     useEffect(() => {
         setMounted(true);
         setMode('dark');
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/business-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -153,26 +171,36 @@ export default function BusinessClubPage() {
             <section className="relative z-10 py-24 max-w-6xl mx-auto px-4">
                 <SectionHeader title="Event Portfolio" subtitle="Fiscal Year" center />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                    <EventCard
-                        title="Innovest '26"
-                        type="Upcoming IPO"
-                        date="Coming Soon"
-                        desc="Our flagship investment and innovation summit."
-                        highlight
-                    />
-                    <EventCard
-                        title="Budget Seminar 2025"
-                        type="Past Analysis"
-                        date="Completed"
-                        desc="Deconstructing the union budget and its economic implications."
-                    />
-                    <EventCard
-                        title="Startup Expo"
-                        type="Collaboration"
-                        date="Completed"
-                        desc="AIC collaboration featuring student startups and innovative pitches."
-                    />
+                <div className="mt-12">
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-amber-500"
+                                    bg="bg-amber-500/10"
+                                    border="group-hover:border-amber-500/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 bg-[#112240] rounded-lg border border-[#233554]">
+                            <TrendingUp className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                            <p className="text-slate-400 font-medium">No fiscal events currently scheduled.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

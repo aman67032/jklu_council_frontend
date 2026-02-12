@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import api from '@/lib/api';
+import ClubEventCard from '@/components/ClubEventCard';
 
 export default function PhotographyClubPage() {
     const { user } = useAuth();
@@ -16,6 +18,8 @@ export default function PhotographyClubPage() {
     const [mounted, setMounted] = useState(false);
     const [joined, setJoined] = useState(false);
     const { scrollY } = useScroll();
+    const [events, setEvents] = useState<any[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
 
     // Parallax effect for hero
     const y1 = useTransform(scrollY, [0, 500], [0, 100]);
@@ -24,7 +28,21 @@ export default function PhotographyClubPage() {
     useEffect(() => {
         setMounted(true);
         setMode('dark');
+        fetchClubEvents();
     }, []);
+
+    const fetchClubEvents = async () => {
+        try {
+            const response = await api.get('/clubs/photography-club');
+            if (response.data.club && response.data.club.events) {
+                setEvents(response.data.club.events);
+            }
+        } catch (error) {
+            console.error('Error fetching club events:', error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
 
     const handleJoin = () => {
         if (!user) {
@@ -149,38 +167,36 @@ export default function PhotographyClubPage() {
                     <SectionTitle number="02" title="Exposure Timeline" center />
                 </div>
 
-                <div className="relative border-l border-neutral-800 ml-4 md:ml-0 space-y-12">
-                    <EventItem
-                        date="23 JAN 2026"
-                        title="Orientation & Portfolio Review"
-                        desc="An introductory session covering the club’s vision, activities, basics of photography, and a meet-and-greet."
-                        status="Completed"
-                    />
-                    <EventItem
-                        date="13 FEB 2026"
-                        title="Interactive Peer Review"
-                        desc="Critique-based session where members present their work and receive feedback to improve visual storytelling."
-                        status="Upcoming"
-                        highlight
-                    />
-                    <EventItem
-                        date="27 FEB 2026"
-                        title="Photo Walk: Heritage Jaipur"
-                        desc="Guided photo walk through heritage sites and local streets, followed by a review session."
-                        status="Upcoming"
-                    />
-                    <EventItem
-                        date="20 MAR 2026"
-                        title="Pro Photography Workshop"
-                        desc="Theme-based hands-on workshop on composition, lighting, and storytelling with a professional."
-                        status="Planned"
-                    />
-                    <EventItem
-                        date="17 APR 2026"
-                        title="Annual Exhibition"
-                        desc="Curated showcase of student work, open to the campus community."
-                        status="Planned"
-                    />
+                <div className="mt-12">
+                    {loadingEvents ? (
+                        <div className="flex justify-center py-20">
+                            <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {events.map((event) => (
+                                <ClubEventCard
+                                    key={event.id}
+                                    id={event.id}
+                                    title={event.title}
+                                    date={event.start_date}
+                                    venue={event.venue}
+                                    imageUrl={event.image_url}
+                                    status={event.status}
+                                    desc={event.description}
+                                    color="text-teal-500"
+                                    bg="bg-neutral-900/50"
+                                    border="group-hover:border-teal-500/50"
+                                    is_enrolled={event.is_enrolled}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 bg-neutral-900/30 rounded-lg border border-neutral-800 border-dashed">
+                            <Camera className="w-12 h-12 text-neutral-600 mx-auto mb-4" />
+                            <p className="text-neutral-500 font-medium">No exposures currently on the timeline.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
